@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+	
+    <bean id="propertyConfigurer" class="com.psychic.robot.utilities.PropertyPlaceholderUtil">
+		<property name="location" value="WEB-INF/application.properties" />
+	</bean>
+
+	<bean id="contextProvider" class="com.psychic.robot.utilities.ApplicationContextUtil" />
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${db.driver}" />
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="initialSize" value="${db.intialsize}" />
+		<property name="maxActive" value="${db.maxactive}" />
+		<property name="maxIdle" value="${db.maxidle}" />
+		<property name="testOnBorrow" value="${db.testonborrow}" />
+		<property name="testOnReturn" value="${db.testonreturn}" />
+		<property name="testWhileIdle" value="${db.testwhileidle}" />
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 	Data Access -->
+	
+	<bean id="broadcastDao" class="com.psychic.robot.dao.BroadcastDataAccessImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<!-- Services -->
+	
+	<bean id="broadcastService" class="com.psychic.robot.services.BroadcastServiceImpl">
+	    <constructor-arg name="broadcastDao" ref="broadcastDao" />
+	</bean>
+	
+</beans>
