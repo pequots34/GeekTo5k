@@ -1,9 +1,9 @@
+<%@page import="org.codehaus.jackson.map.JsonMappingException"%>
+<%@page import="org.codehaus.jackson.map.ObjectMapper"%>
 <%@page import="com.geek.exercise.responses.ErrorResponse"%>
 <%@page import="java.io.IOException"%>
 <%@page import="org.apache.log4j.Logger"%>
-<%@page import="org.codehaus.jackson.map.JsonMappingException"%>
 <%@page import="org.codehaus.jackson.JsonGenerationException"%>
-<%@page import="org.codehaus.jackson.map.ObjectMapper"%>
 <%@page import="java.io.StringWriter"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
