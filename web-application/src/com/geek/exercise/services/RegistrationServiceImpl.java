@@ -34,8 +34,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 		
 		Account account = mRegistrationDataAccess.getAccountById( channelId );
 		
-		if ( mRegistrationDataAccess.getAccountById( channelId ) != null ) {
+		if ( account != null ) {
 			return ErrorResponse.newBuilder()
+					.setExtra( channelId )
 					.setMessage( new StringBuilder()
 							.append( "channel id already exists: " )
 							.append( request.getChannelId() )
@@ -54,10 +55,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 		}
 		
 		if ( registered > 0 ) {
-			account.setChannelId( channelId );
-			
 			return RegistrationResponse.newBuilder()
-					.setAccount( account )
+					.setAccount( mRegistrationDataAccess.getAccountById( channelId ) )
 					.build();
 		}
 		

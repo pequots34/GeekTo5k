@@ -53,9 +53,8 @@ public class RegistrationDataAccessImpl extends NamedParameterJdbcDaoSupport imp
 
 		@Override
 		public Account mapRow( ResultSet results, int position ) throws SQLException {
-			Account account = new Account();
-			
-			return account;
+			return Account.newBuilder()
+					.build();
 		}
 		
 	}
