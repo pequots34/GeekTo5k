@@ -29,6 +29,7 @@
 	<!-- Data Access -->
 	
 	<bean id="registrationDao" class="com.geek.exercise.dao.RegistrationDataAccessImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
 	
 	<!-- Services -->

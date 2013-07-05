@@ -44,9 +44,13 @@ public class RegistrationController {
 				JsonNode channelId = data.get( "channelId" );
 				
 				if ( channelId != null ) {
-					return mRegistrationService.register( RegistrationRequest.newBuilder()
+					Response response =  mRegistrationService.register( RegistrationRequest.newBuilder()
 							.setChannelId( channelId.getTextValue() )
 							.build() );
+					
+					if ( response != null ) {
+						return response;
+					}
 				}
 			} catch ( JsonProcessingException e ) {
 				return ErrorResponse.newBuilder()
