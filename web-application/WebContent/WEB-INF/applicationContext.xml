@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 	
-    <bean id="propertyConfigurer" class="com.psychic.robot.utilities.PropertyPlaceholderUtil">
+    <bean id="propertyConfigurer" class="com.geek.exercise.utilities.PropertyPlaceholderUtil">
 		<property name="location" value="WEB-INF/application.properties" />
 	</bean>
 
-	<bean id="contextProvider" class="com.psychic.robot.utilities.ApplicationContextUtil" />
+	<bean id="contextProvider" class="com.geek.exercise.utilities.ApplicationContextUtil" />
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${db.driver}" />
@@ -28,14 +28,6 @@
 	
 	<!-- 	Data Access -->
 	
-	<bean id="broadcastDao" class="com.psychic.robot.dao.BroadcastDataAccessImpl">
-		<property name="jdbcTemplate" ref="jdbcTemplate" />
-	</bean>
-	
 	<!-- Services -->
-	
-	<bean id="broadcastService" class="com.psychic.robot.services.BroadcastServiceImpl">
-	    <constructor-arg name="broadcastDao" ref="broadcastDao" />
-	</bean>
 	
 </beans>
