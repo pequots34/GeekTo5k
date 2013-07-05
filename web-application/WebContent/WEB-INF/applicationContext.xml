@@ -26,8 +26,15 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<!-- 	Data Access -->
+	<!-- Data Access -->
+	
+	<bean id="registrationDao" class="com.geek.exercise.dao.RegistrationDataAccessImpl">
+	</bean>
 	
 	<!-- Services -->
+	
+	<bean id="registrationService" class="com.geek.exercise.services.RegistrationServiceImpl">
+		<constructor-arg name="registrationDao" ref="registrationDao" />
+	</bean>
 	
 </beans>
