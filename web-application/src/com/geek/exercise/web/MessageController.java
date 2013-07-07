@@ -44,7 +44,11 @@ public class MessageController {
 				JsonNode message = data.get( "message" );
 				
 				if ( message != null ) {
-					return mMessageService.send( message.getTextValue() );
+					Response response = mMessageService.send( message.getTextValue() );
+					
+					if ( response != null ) {
+						return response;
+					}
 				}
 			} catch ( JsonProcessingException e ) {
 				return ErrorResponse.newBuilder()
