@@ -3,19 +3,20 @@ package com.geek.exercise.services;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.geek.exercise.responses.ErrorResponse;
 import com.geek.exercise.responses.Response;
 import com.geek.exercise.transfer.Account;
+import com.geek.exercise.utilities.HTTPTransport;
 import com.geek.exercise.utilities.PropertyPlaceholderUtil;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.common.cache.Cache;
@@ -50,21 +51,21 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 		
 		final String key = PropertyPlaceholderUtil.getPropertyByKey( PropertyPlaceholderUtil.GOOGLE_CLIENT_SECRET );
 		
-		try {
-			GoogleTokenResponse token = null;
-			
-			if ( mGoogleAuthorization == null ) {
-				try {
-					token = mGoogleAuthorizationService.getAuthorization();
-					
-					newCache( key, token );
-				} catch( IOException e ) {
-					return ErrorResponse.newBuilder()
-							.setMessage( e )
-							.build();
-				}
+		GoogleTokenResponse token = null;
+		
+		if ( mGoogleAuthorization == null ) {
+			try {
+				token = mGoogleAuthorizationService.getAuthorization();
+				
+				newCache( key, token );
+			} catch( IOException e ) {
+				return ErrorResponse.newBuilder()
+						.setMessage( e )
+						.build();
 			}
-			
+		}
+		
+		try {
 			token = mGoogleAuthorization.get( key, new Callable<GoogleTokenResponse>() {
 
 				@Override
@@ -81,19 +82,21 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 				}
 				
 			} );
-			
-			if ( token == null ) {
-				return ErrorResponse.newBuilder()
-						.setMessage( "Google authorization token couldn't be found!" )
-						.build();
-			}
-			
-			// cache token
-			// connection pool ( static )
+		} catch ( ExecutionException e ) {
+			return ErrorResponse.newBuilder()
+					.setMessage( e )
+					.build();
+		}
+		
+		if ( token == null ) {
+			return ErrorResponse.newBuilder()
+					.setMessage( "Google authorization token couldn't be found!" )
+					.build();
+		}
+		
+		try {
 			//exector service
 			//build response
-			
-			HttpClient client = new DefaultHttpClient();
 			
 			HttpPost method = new HttpPost( "https://www.googleapis.com/gcm_for_chrome/v1/messages" );
 			
@@ -101,14 +104,18 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 			
 			method.addHeader( "Authorization", token.getTokenType() + " " + token.getAccessToken() );
 			
-			method.setEntity( new StringEntity( "{'channelId': '01282915067796969032/mdidlpphalgcdbfaoegncdpoolcokkpf','subchannelId': '0', 'payload': 'dinky.. yippie real token'}" ) );
+			method.setEntity( new StringEntity( "{'channelId': '01282915067796969032/mdidlpphalgcdbfaoegncdpoolcokkpf','subchannelId': '0', 'payload': 'static http transport'}" ) );
 			
-			HttpResponse response = client.execute( method );
+			HttpResponse response = HTTPTransport.execute( method );
 			
 			return ErrorResponse.newBuilder()
-					.setMessage( " --- HTTP RESPONSE CODE -- : " + response.getStatusLine().getStatusCode() )
+					.setMessage( "HTTP RESPONSE: " + response.getStatusLine().getStatusCode() )
 					.build();
-		} catch ( Exception e ) {
+		} catch ( ClientProtocolException e ) {
+			return ErrorResponse.newBuilder()
+					.setMessage( e )
+					.build();
+		} catch ( IOException e ) {
 			return ErrorResponse.newBuilder()
 					.setMessage( e )
 					.build();
