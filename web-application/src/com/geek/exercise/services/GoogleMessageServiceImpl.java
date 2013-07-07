@@ -104,12 +104,12 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 			
 			method.addHeader( "Authorization", token.getTokenType() + " " + token.getAccessToken() );
 			
-			method.setEntity( new StringEntity( "{'channelId': '01282915067796969032/mdidlpphalgcdbfaoegncdpoolcokkpf','subchannelId': '0', 'payload': 'static http transport'}" ) );
+			method.setEntity( new StringEntity( "{'channelId': '01282915067796969032/mdidlpphalgcdbfaoegncdpoolcokkpf','subchannelId': '0', 'payload': 'HTTP Transport JAY S'}" ) );
 			
 			HttpResponse response = HTTPTransport.execute( method );
 			
 			return ErrorResponse.newBuilder()
-					.setMessage( "HTTP RESPONSE: " + response.getStatusLine().getStatusCode() )
+					.setMessage( "RESPONSE: " + response.getStatusLine().getStatusCode() )
 					.build();
 		} catch ( ClientProtocolException e ) {
 			return ErrorResponse.newBuilder()

@@ -22,28 +22,6 @@ public class HTTPTransport {
 
 	private static HttpClient mHttpClient;
 	
-	{
-        HttpParams parameters = new BasicHttpParams();
-        
-        HttpProtocolParams.setVersion( parameters, HttpVersion.HTTP_1_1 );
-        
-        HttpProtocolParams.setContentCharset( parameters, "utf-8" );
-        
-        SchemeRegistry registry = new SchemeRegistry();
-        
-        registry.register( new Scheme( "http", PlainSocketFactory.getSocketFactory(), 80 ) );
-        
-        final SSLSocketFactory factory = SSLSocketFactory.getSocketFactory();
-        
-        factory.setHostnameVerifier( SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER );
-        
-        registry.register( new Scheme( "https", factory, 443 ) );
- 
-        ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager( parameters, registry );
-        
-        mHttpClient = new DefaultHttpClient( manager, parameters );
-	}
-	
 	private HTTPTransport() {
 		super();
 		
@@ -51,11 +29,37 @@ public class HTTPTransport {
 	}
 	
 	public static HttpResponse execute( HttpPost method ) throws ClientProtocolException, IOException {
-		return mHttpClient.execute( method );
+		return getHTTPClient().execute( method );
 	}
 	
 	public static HttpResponse execute( HttpGet method ) throws ClientProtocolException, IOException {
-		return mHttpClient.execute( method );
+		return getHTTPClient().execute( method );
+	}
+	
+	public static HttpClient getHTTPClient() {
+		if ( mHttpClient == null ) {
+			HttpParams parameters = new BasicHttpParams();
+	        
+	        HttpProtocolParams.setVersion( parameters, HttpVersion.HTTP_1_1 );
+	        
+	        HttpProtocolParams.setContentCharset( parameters, "utf-8" );
+	        
+	        SchemeRegistry registry = new SchemeRegistry();
+	        
+	        registry.register( new Scheme( "http", PlainSocketFactory.getSocketFactory(), 80 ) );
+	        
+	        final SSLSocketFactory factory = SSLSocketFactory.getSocketFactory();
+	        
+	        factory.setHostnameVerifier( SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER );
+	        
+	        registry.register( new Scheme( "https", factory, 443 ) );
+	 
+	        ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager( parameters, registry );
+	        
+	        mHttpClient = new DefaultHttpClient( manager, parameters );
+		}
+		
+		return mHttpClient;
 	}
 
 }
