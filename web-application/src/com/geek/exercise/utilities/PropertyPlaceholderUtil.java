@@ -11,6 +11,12 @@ import org.springframework.util.PropertyPlaceholderHelper;
 
 public class PropertyPlaceholderUtil extends PropertyPlaceholderConfigurer {
 
+	public static final String GOOGLE_REFRESH_TOKEN = "google.authorization.refresh.token";
+	
+	public static final String GOOGLE_CLIENT_ID = "google.authorization.clientid";
+	
+	public static final String GOOGLE_CLIENT_SECRET = "google.authorization.clientsecret";
+	
 	private static final String PROPERTY_PREFIX = "${";
 	
 	private static final String PROPERTY_SUFFIX = "}";
@@ -38,6 +44,10 @@ public class PropertyPlaceholderUtil extends PropertyPlaceholderConfigurer {
 				mProperties.put(key, value);
 			}
 		}
+	}
+	
+	public static String getPropertyByKey( String key ) {
+		return mProperties.get( key );
 	}
 	
 }

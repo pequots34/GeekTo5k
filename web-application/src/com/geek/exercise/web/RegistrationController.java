@@ -60,6 +60,10 @@ public class RegistrationController {
 				return ErrorResponse.newBuilder()
 						.setMessage( e )
 						.build();
+			} catch ( Exception e ) {
+				return ErrorResponse.newBuilder()
+						.setMessage( e )
+						.build();
 			}
 		}
 		

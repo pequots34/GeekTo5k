@@ -38,8 +38,16 @@
 		<constructor-arg name="registrationDao" ref="registrationDao" />
 	</bean>
 	
+	<bean id="googleAuthorizationService" class="com.geek.exercise.services.GoogleAuthorizationServiceImpl">
+	</bean>
+	
+	<bean id="googleMessageService" class="com.geek.exercise.services.GoogleMessageServiceImpl">
+		<constructor-arg name="googleAuthorizationService" ref="googleAuthorizationService" />
+	</bean>
+	
 	<bean id="messageService" class="com.geek.exercise.services.MessageServiceImpl">
 		<constructor-arg name="registrationService" ref="registrationService" />
+		<constructor-arg name="googleMessageService" ref="googleMessageService" />
 	</bean>
 	
 </beans>
