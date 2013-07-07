@@ -21,6 +21,7 @@ public class MessageServiceImpl implements MessageService {
 		mRegistrationService = registrationService;
 	}
 	
+	@Override
 	public Response send( String message ) {
 		if ( StringUtils.isEmpty( message ) ) {
 			return ErrorResponse.newBuilder()
