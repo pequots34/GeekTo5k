@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.geek.exercise.dao.RegistrationDataAccess;
 import com.geek.exercise.requests.RegistrationRequest;
 import com.geek.exercise.responses.ErrorResponse;
+import com.geek.exercise.responses.RegisteredResponse;
 import com.geek.exercise.responses.RegistrationResponse;
 import com.geek.exercise.responses.Response;
 import com.geek.exercise.throwables.DataAccessLayerException;
@@ -61,6 +62,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public RegisteredResponse getRegistered() {
+		return RegisteredResponse.newBuilder()
+				.setAccounts( mRegistrationDataAccess.getRegistered() )
+				.build();
 	}
 
 }

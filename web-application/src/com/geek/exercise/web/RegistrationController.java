@@ -67,5 +67,11 @@ public class RegistrationController {
 				.setMessage( ErrorResponse.GATEWAY_ERROR_MESSAGE )
 				.build();
 	}
+	
+	@RequestMapping( value ="/registered", method = RequestMethod.GET )
+	@ResponseBody
+	public Response registered() {
+		return mRegistrationService.getRegistered();
+	}
 
 }

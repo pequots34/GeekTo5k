@@ -39,6 +39,7 @@
 	</bean>
 	
 	<bean id="messageService" class="com.geek.exercise.services.MessageServiceImpl">
+		<constructor-arg name="registrationService" ref="registrationService" />
 	</bean>
 	
 </beans>

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
@@ -20,6 +21,8 @@ public class RegistrationDataAccessImpl extends NamedParameterJdbcDaoSupport imp
 	private static final String ACCOUNT_BY_ID = "SELECT * FROM ACCOUNTS WHERE CHANNEL_ID = ?";
 	
 	private static final String ADD_ACCOUNT = "INSERT INTO ACCOUNTS ( CHANNEL_ID ) VALUES ( ? )";
+	
+	private static final String REGISTERED_ACCOUNTS = "SELECT * FROM ACCOUNTS ORDER BY CREATED DESC";
 	
 	public RegistrationDataAccessImpl() {
 		super();
@@ -52,6 +55,15 @@ public class RegistrationDataAccessImpl extends NamedParameterJdbcDaoSupport imp
 			} );
 		} catch( DataAccessException e ) {
 			throw new DataAccessLayerException( e.toString() );
+		}
+	}
+	
+	@Override
+	public List<Account> getRegistered() {
+		try{
+			return getJdbcTemplate().query( REGISTERED_ACCOUNTS, new AccountMapper() );
+		} catch( DataAccessException e ) {
+			return null;
 		}
 	}
 	
