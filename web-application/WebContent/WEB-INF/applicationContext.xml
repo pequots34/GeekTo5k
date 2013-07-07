@@ -38,4 +38,7 @@
 		<constructor-arg name="registrationDao" ref="registrationDao" />
 	</bean>
 	
+	<bean id="messageService" class="com.geek.exercise.services.MessageServiceImpl">
+	</bean>
+	
 </beans>
