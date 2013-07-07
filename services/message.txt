@@ -1,0 +1,14 @@
+http://[DOMAIN]/message/send
+
+Method
+
+POST
+
+Error
+
+{
+    "message": "[64] RegistrationServiceImpl.register: channel id already exists: 01282915067796969032/mdidlpphalgcdbfaoegncdpoolcokkpf",
+    "extra": "01282915067796969032/mdidlpphalgcdbfaoegncdpoolcokkpf",
+    "status": "ERROR",
+    "time": 1373074241068
+}
