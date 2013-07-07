@@ -1,5 +1,15 @@
 http://[DOMAIN]/register/
 
+Method
+
+POST
+
+Body
+
+{
+    "channelId": "0128dsds2915067796969032/mdidlpphalgcdbfaoegncdpoolcokkpf"
+}
+
 Error
 
 {
