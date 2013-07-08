@@ -3,6 +3,7 @@ package com.geek.exercise.services;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.geek.exercise.requests.MessageRequest;
 import com.geek.exercise.responses.ErrorResponse;
 import com.geek.exercise.responses.RegisteredResponse;
 import com.geek.exercise.responses.Response;
@@ -23,8 +24,8 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
 	@Override
-	public Response send( String message ) {
-		if ( StringUtils.isEmpty( message ) ) {
+	public Response send( MessageRequest request ) {
+		if ( request == null || StringUtils.isEmpty( request.getMessage() ) ) {
 			return ErrorResponse.newBuilder()
 					.setMessage( "message is required!" )
 					.build();
@@ -38,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
 					.build();
 		}
 		
-		return mGoogleMessageService.sendToGoogleCloudMessage( registered.getAccounts(), message );
+		return mGoogleMessageService.sendToGoogleCloudMessage( registered.getAccounts(), request.getMessage() );
 	}
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.geek.exercise.requests.MessageRequest;
 import com.geek.exercise.responses.ErrorResponse;
 import com.geek.exercise.responses.Response;
 import com.geek.exercise.services.MessageService;
@@ -44,7 +45,9 @@ public class MessageController {
 				JsonNode message = data.get( "message" );
 				
 				if ( message != null ) {
-					Response response = mMessageService.send( message.getTextValue() );
+					Response response = mMessageService.send( MessageRequest.newBuilder()
+							.setMessage( message.getTextValue() )
+							.build() );
 					
 					if ( response != null ) {
 						return response;
