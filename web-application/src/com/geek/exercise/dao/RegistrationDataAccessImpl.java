@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -15,6 +16,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
 import com.geek.exercise.throwables.DataAccessLayerException;
 import com.geek.exercise.transfer.Account;
+import com.geek.exercise.utilities.PropertyPlaceholderUtil;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 public class RegistrationDataAccessImpl extends NamedParameterJdbcDaoSupport implements RegistrationDataAccess {
 
@@ -24,6 +28,8 @@ public class RegistrationDataAccessImpl extends NamedParameterJdbcDaoSupport imp
 	
 	private static final String REGISTERED_ACCOUNTS = "SELECT * FROM ACCOUNTS ORDER BY CREATED DESC";
 	
+	private static Cache<String, Account> mAccountsCache;
+	
 	public RegistrationDataAccessImpl() {
 		super();
 	}
@@ -31,28 +37,44 @@ public class RegistrationDataAccessImpl extends NamedParameterJdbcDaoSupport imp
 	@Override
 	public Account getAccountById( String id ) {
 		try{
-			return getJdbcTemplate().queryForObject( ACCOUNT_BY_ID, new Object[] {
-					id
-			}, new AccountMapper() );
-		} catch( DataAccessException e ) {
-			return null;
-		}
+			if ( PropertyPlaceholderUtil.useCacheStorage() ) {
+				return getLocalCache().getIfPresent( id );
+			} else {
+				return getJdbcTemplate().queryForObject( ACCOUNT_BY_ID, new Object[] {
+						id
+				}, new AccountMapper() );
+			}
+		} catch( DataAccessException e ) { }
+		
+		return null;
 	}
 	
 	@Override
 	public long register( final String id ) throws DataAccessLayerException {
 		try {
-			return getJdbcTemplate().update( new PreparedStatementCreator() {
+			if ( PropertyPlaceholderUtil.useCacheStorage() ) {
+				long created = System.currentTimeMillis();
 				
-				@Override
-				public PreparedStatement createPreparedStatement( Connection connection ) throws SQLException {
-					PreparedStatement statement = connection.prepareStatement( ADD_ACCOUNT );
+				getLocalCache().put( id, Account.newBuilder() 
+						.setChannelId( id )
+						.setCreated( new DateTime( created ) )
+						.setId( getLocalCache().size() + 1 )
+						.build() );
+				
+				return created;
+			} else {
+				return getJdbcTemplate().update( new PreparedStatementCreator() {
 					
-					statement.setString( 1, id );
-					
-					return statement;
-				}
-			} );
+					@Override
+					public PreparedStatement createPreparedStatement( Connection connection ) throws SQLException {
+						PreparedStatement statement = connection.prepareStatement( ADD_ACCOUNT );
+						
+						statement.setString( 1, id );
+						
+						return statement;
+					}
+				} );
+			}
 		} catch( DataAccessException e ) {
 			throw new DataAccessLayerException( e.toString() );
 		}
@@ -61,10 +83,35 @@ public class RegistrationDataAccessImpl extends NamedParameterJdbcDaoSupport imp
 	@Override
 	public List<Account> getRegistered() {
 		try{
-			return getJdbcTemplate().query( REGISTERED_ACCOUNTS, new AccountMapper() );
-		} catch( DataAccessException e ) {
-			return null;
+			if ( PropertyPlaceholderUtil.useCacheStorage() ) {
+				return new ArrayList<Account>( getLocalCache().asMap().values() );
+			} else {
+				return getJdbcTemplate().query( REGISTERED_ACCOUNTS, new AccountMapper() );
+			}
+		} catch( DataAccessException e ) { }
+		
+		return null;
+	}
+	
+	@Override
+	public long flush() {
+		if ( PropertyPlaceholderUtil.useCacheStorage() ) {
+			long size = getLocalCache().size();
+			
+			getLocalCache().invalidateAll();
+			
+			return size;
 		}
+		
+		return 0;
+	}
+	
+	private static Cache<String, Account> getLocalCache() {
+		if ( mAccountsCache == null ) {
+			mAccountsCache = CacheBuilder.newBuilder().build();
+		}
+		
+		return mAccountsCache;
 	}
 	
 	public static final class AccountMapper implements RowMapper<Account> {

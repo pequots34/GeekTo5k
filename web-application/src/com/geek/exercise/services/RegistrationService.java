@@ -9,5 +9,7 @@ public interface RegistrationService {
 	public Response register( RegistrationRequest request );
 	
 	public RegisteredResponse getRegistered();
+	
+	public Response flush();
 
 }

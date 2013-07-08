@@ -13,4 +13,6 @@ public interface RegistrationDataAccess {
 
 	public List<Account> getRegistered();
 	
+	public long flush();
+	
 }

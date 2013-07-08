@@ -77,5 +77,11 @@ public class RegistrationController {
 	public Response registered() {
 		return mRegistrationService.getRegistered();
 	}
+	
+	@RequestMapping( value ="/registered/flush", method = RequestMethod.POST )
+	@ResponseBody
+	public Response flush() {
+		return mRegistrationService.flush();
+	}
 
 }

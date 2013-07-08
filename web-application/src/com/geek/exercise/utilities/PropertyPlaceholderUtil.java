@@ -17,6 +17,8 @@ public class PropertyPlaceholderUtil extends PropertyPlaceholderConfigurer {
 	
 	public static final String GOOGLE_CLIENT_SECRET = "google.authorization.clientsecret";
 	
+	public static final String ACCOUNTS_LOCAL_STORE = "accounts.local.store";
+	
 	private static final String PROPERTY_PREFIX = "${";
 	
 	private static final String PROPERTY_SUFFIX = "}";
@@ -48,6 +50,14 @@ public class PropertyPlaceholderUtil extends PropertyPlaceholderConfigurer {
 	
 	public static String getPropertyByKey( String key ) {
 		return mProperties.get( key );
+	}
+	
+	public static boolean useCacheStorage() {
+		try {
+			return Boolean.parseBoolean( getPropertyByKey( ACCOUNTS_LOCAL_STORE ) );
+		} catch ( Exception e ) { }
+		
+		return false;
 	}
 	
 }

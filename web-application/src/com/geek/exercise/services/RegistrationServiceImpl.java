@@ -7,10 +7,12 @@ import com.geek.exercise.dao.RegistrationDataAccess;
 import com.geek.exercise.requests.RegistrationRequest;
 import com.geek.exercise.responses.ErrorResponse;
 import com.geek.exercise.responses.RegisteredResponse;
+import com.geek.exercise.responses.RegistrationFlushResponse;
 import com.geek.exercise.responses.RegistrationResponse;
 import com.geek.exercise.responses.Response;
 import com.geek.exercise.throwables.DataAccessLayerException;
 import com.geek.exercise.transfer.Account;
+import com.geek.exercise.utilities.PropertyPlaceholderUtil;
 
 public class RegistrationServiceImpl implements RegistrationService {
 
@@ -69,6 +71,22 @@ public class RegistrationServiceImpl implements RegistrationService {
 		return RegisteredResponse.newBuilder()
 				.setAccounts( mRegistrationDataAccess.getRegistered() )
 				.build();
+	}
+
+	@Override
+	public Response flush() {
+		long count = mRegistrationDataAccess.flush();
+		
+		if ( count > 0 ) {
+			return RegistrationFlushResponse.newBuilder()
+					.setCount( count )
+					.build();
+		} else {
+			return ErrorResponse.newBuilder()
+					.setExtra( PropertyPlaceholderUtil.useCacheStorage() )
+					.setMessage( "no items to evict from storage!" )
+					.build();
+		}
 	}
 
 }
