@@ -13,12 +13,14 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.geek.exercise.responses.ErrorResponse;
 import com.geek.exercise.responses.Response;
 import com.geek.exercise.transfer.Account;
+import com.geek.exercise.transfer.GoogleMessage;
+import com.geek.exercise.utilities.GlobalConstants;
+import com.geek.exercise.utilities.GoogleCloudMessageUtil;
 import com.geek.exercise.utilities.HTTPTransport;
 import com.geek.exercise.utilities.PropertyPlaceholderUtil;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
@@ -53,7 +55,7 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 		}
 		
 		try {
-			ExecutorService executor = Executors.newFixedThreadPool( 10 );
+			ExecutorService executor = Executors.newFixedThreadPool( 5 );
 			
 			List<Callable<MessageTaskResponse>> callables = new ArrayList<Callable<MessageTaskResponse>>( accounts.size() );
 			
@@ -95,10 +97,6 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 		
 		@Override
 		public MessageTaskResponse call() throws Exception {
-			MessageTaskResponse.Builder builder = MessageTaskResponse.newBuilder()
-					.setAccount( mAccount )
-					.setMessage( mMessage );
-			
 			final String key = PropertyPlaceholderUtil.getPropertyByKey( PropertyPlaceholderUtil.GOOGLE_CLIENT_SECRET );
 			
 			GoogleTokenResponse token = null;
@@ -109,7 +107,8 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 					
 					newCache( key, token );
 				} catch( IOException e ) {
-					return builder.setExtra( e.toString() )
+					return MessageTaskResponse.newBuilder()
+							.setExtra( e.toString() )
 							.build();
 				}
 			}
@@ -132,23 +131,41 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 					
 				} );
 			} catch ( ExecutionException e ) {
-				return builder.setExtra( e.toString() )
+				return MessageTaskResponse.newBuilder()
+						.setExtra( e.toString() )
 						.build();
 			}
 			
 			if ( token != null ) {
-				HttpPost method = new HttpPost( "https://www.googleapis.com/gcm_for_chrome/v1/messages" );
+				HttpPost method = new HttpPost( GoogleCloudMessageUtil.getMessagingEndpoint() );
 				
-				method.addHeader( "Content-Type", "application/json" );
+				method.addHeader( "Content-Type", GlobalConstants.APPLICATION_JSON_CONTENT_TYPE );
 				
-				method.addHeader( "Authorization", token.getTokenType() + " " + token.getAccessToken() );
+				method.addHeader( "Authorization", GoogleCloudMessageUtil.toAuthorizationHeader( token ) );
 				
-				method.setEntity( new StringEntity( "{'channelId': '01282915067796969032/mdidlpphalgcdbfaoegncdpoolcokkpf','subchannelId': '0', 'payload': 'HTTP Transport JAY S'}" ) );
+				GoogleMessage payload = new GoogleMessage( mMessage );
+				
+				payload.setChannelId( mAccount.getChannelId() );
+				
+				payload.setSubchannelId( GoogleCloudMessageUtil.DEFAULT_SUB_CHANNEL_ID );
+				
+				method.setEntity( GoogleCloudMessageUtil.toEntity( payload ) );
 				
 				HttpResponse response = HTTPTransport.execute( method );
+				
+				int statusCode = response.getStatusLine().getStatusCode();
+				
+				return MessageTaskResponse.newBuilder()
+						.setExtra( statusCode )
+						.setAccount( mAccount )
+						.setMessage( mMessage )
+						.setExecuted( statusCode == 204 )
+					.build();
 			}
 			
-			return builder.build();
+			return MessageTaskResponse.newBuilder()
+					.setExtra( "Google Auth token couldn't be found!" )
+					.build();
 		}
 		
 	}
@@ -157,10 +174,34 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 		
 		private Account mAccount;
 		
+		private boolean mExecuted;
+		
+		private Object mExtra;
+		
+		private String mMessage;
+		
 		public MessageTaskResponse( Builder builder ) {
 			super();
 			
 			mAccount = builder.account;
+			
+			mExecuted = builder.executed;
+			
+			mExtra = builder.extra;
+			
+			mMessage = builder.message;
+		}
+		
+		public boolean executed() {
+			return mExecuted;
+		}
+		
+		public Object getExtra() {
+			return mExtra;
+		}
+		
+		public String getMessage() {
+			return mMessage;
 		}
 		
 		public Account getAccount() {

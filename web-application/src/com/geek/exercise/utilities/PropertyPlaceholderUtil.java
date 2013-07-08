@@ -19,10 +19,12 @@ public class PropertyPlaceholderUtil extends PropertyPlaceholderConfigurer {
 	
 	public static final String ACCOUNTS_LOCAL_STORE = "accounts.local.store";
 	
+	public static final String GOOGLE_CLOUD_MESSAGING_ENDPOINT = "google.cloud.endpoint";
+	
 	private static final String PROPERTY_PREFIX = "${";
 	
 	private static final String PROPERTY_SUFFIX = "}";
-	
+
 	private final PropertyPlaceholderHelper mPlaceholder = new PropertyPlaceholderHelper( PROPERTY_PREFIX, PROPERTY_SUFFIX );
 
 	private static Map<String, String> mProperties;
