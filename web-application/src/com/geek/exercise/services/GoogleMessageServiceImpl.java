@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.geek.exercise.responses.ErrorResponse;
+import com.geek.exercise.responses.GoogleCloudMessageResponse;
 import com.geek.exercise.responses.Response;
 import com.geek.exercise.transfer.Account;
 import com.geek.exercise.transfer.GoogleMessage;
@@ -29,6 +30,8 @@ import com.google.common.cache.CacheBuilder;
 
 public class GoogleMessageServiceImpl implements GoogleMessageService {
 
+	private static final int MAX_FIXED_THREAD_POOL_SIZE = 5;
+	
 	private static Cache<String, GoogleTokenResponse> mGoogleAuthorization;
 	
 	private GoogleAuthorizationService mGoogleAuthorizationService;
@@ -55,7 +58,7 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 		}
 		
 		try {
-			ExecutorService executor = Executors.newFixedThreadPool( 5 );
+			ExecutorService executor = Executors.newFixedThreadPool( MAX_FIXED_THREAD_POOL_SIZE );
 			
 			List<Callable<MessageTaskResponse>> callables = new ArrayList<Callable<MessageTaskResponse>>( accounts.size() );
 			
@@ -63,9 +66,27 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 				callables.add( new MessageTask( account, message ) );
 			}
 			
-			List<Future<MessageTaskResponse>> executed = executor.invokeAll( callables );
+			List<Future<MessageTaskResponse>> tasks = executor.invokeAll( callables );
 			
-			return new Response();
+			if ( tasks == null || tasks.isEmpty() ) {
+				return ErrorResponse.newBuilder()
+						.setMessage( "Messages couldn't be sent!" )
+						.build();
+			}
+			
+			final List<MessageTaskResponse> messages = new ArrayList<MessageTaskResponse>( tasks.size() );
+			
+			for ( Future<MessageTaskResponse> task : tasks ) {
+				try {
+					if ( task.isDone() ) {
+						messages.add( task.get() );
+					}
+				} catch ( ExecutionException e ) { }
+			}
+			
+			return GoogleCloudMessageResponse.newBuilder()
+					.setTasks( messages )
+					.build();
 		} catch ( InterruptedException e ) {
 			return ErrorResponse.newBuilder()
 					.setMessage( e )
