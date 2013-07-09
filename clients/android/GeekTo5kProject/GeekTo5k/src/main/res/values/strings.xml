@@ -3,6 +3,7 @@
 
     <string name="app_name">GeekTo5k</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_start_recognition_updates">Start</string>
+    <string name="action_stop_recognition_updates">Stop</string>
 
 </resources>
