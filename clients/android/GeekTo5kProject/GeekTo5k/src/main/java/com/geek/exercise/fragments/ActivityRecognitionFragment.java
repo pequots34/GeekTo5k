@@ -7,10 +7,18 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.geek.exercise.R;
 import com.geek.exercise.managers.StateManager;
 import com.geek.exercise.services.ActivityIntentService;
@@ -18,13 +26,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Pequots34 on 7/8/13.
  */
-public class ActivityRecognition extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class ActivityRecognitionFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
-    public static final int DETECTION_INTERVAL_SECONDS = 20;
+    public static final int DETECTION_INTERVAL_SECONDS = 10;
 
     public static final int MILLISECONDS_PER_SECOND = 1000;
 
@@ -32,7 +42,7 @@ public class ActivityRecognition extends Fragment implements GooglePlayServicesC
 
     public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    private static final String TAG = ActivityRecognition.class.getSimpleName();
+    private static final String TAG = ActivityRecognitionFragment.class.getSimpleName();
 
     private IActivityRecognitionListener mRecognitionListener;
 
@@ -40,7 +50,11 @@ public class ActivityRecognition extends Fragment implements GooglePlayServicesC
 
     private PendingIntent mActivityRecognitionPendingIntent;
 
-    public ActivityRecognition() {
+    private TextView mType;
+
+    private RequestQueue mRequestQueue;
+
+    public ActivityRecognitionFragment() {
         super();
 
         mActivityRecognitionPendingIntent = null;
@@ -57,6 +71,8 @@ public class ActivityRecognition extends Fragment implements GooglePlayServicesC
         if ( !StateManager.ApplicationManager.INSTANCE.isInitialized() ) {
             StateManager.ApplicationManager.INSTANCE.initialize( getActivity() );
         }
+
+        mRequestQueue = StateManager.ApplicationManager.INSTANCE.getRequestQueue();
     }
 
     @Override
@@ -73,6 +89,11 @@ public class ActivityRecognition extends Fragment implements GooglePlayServicesC
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
         View view = inflater.inflate( R.layout.fragment_activity_recognition, null, false );
+
+        if ( view != null ) {
+            mType = (TextView) view.findViewById( R.id.type );
+
+        }
 
         return view;
     }
@@ -105,6 +126,61 @@ public class ActivityRecognition extends Fragment implements GooglePlayServicesC
             }
         }
 
+    }
+
+    public void setType( String type ) {
+        if ( !TextUtils.isEmpty( mType.getText() ) ) {
+            type = TextUtils.concat( mType.getText(), "\n", type ).toString();
+        }
+
+        mType.setText( type );
+
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put( "message", type );
+        } catch ( JSONException e ) {
+            e.printStackTrace();
+        }
+
+         /*DetectedActivity probability = result.getMostProbableActivity();
+
+            final int confidence = probability.getConfidence();
+
+            final int type = probability.getType();
+
+            Log.d( TAG, "CONFIDENCE: " + Integer.toString( confidence ) );
+
+            Log.d( TAG, "ACTIVITY TYPE: " + getNameFromType( type ) );
+
+            Intent broadcast = new Intent();
+
+            broadcast.setAction( MainActivity.ACTION_REFRESH_ACTIVITY );
+
+            broadcast.putExtra( "type", getNameFromType( type ) );
+
+            LocalBroadcastManager.getInstance( this ).sendBroadcast( broadcast );
+
+            if ( isOnTheMove( type ) && ( confidence >= 50 ) ) {
+                // Toast.makeText( getApplicationContext(), getNameFromType( type ), Toast.LENGTH_SHORT ).show();
+            }*/
+
+        JsonObjectRequest request = new JsonObjectRequest( Request.Method.POST, "http://geek-to-5k.elasticbeanstalk.com/message/send", data, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse( JSONObject jsonObject ) {
+                Toast.makeText( getActivity(), jsonObject.toString(), Toast.LENGTH_SHORT ).show();
+            }
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse( VolleyError volleyError ) {
+                Toast.makeText( getActivity(), volleyError.getMessage(), Toast.LENGTH_SHORT ).show();
+            }
+        } );
+
+        //mRequestQueue.add( request );
     }
 
     public void setRequestPendingIntent( PendingIntent intent ) {
