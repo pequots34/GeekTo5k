@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.geek.exercise.fragments.AccountFragment;
 import com.geek.exercise.managers.StateManager;
 import com.geek.exercise.transfer.Account;
+import com.geek.exercise.utilities.GooglePlayServiceUtils;
 import com.geek.exercise.utilities.IntentUtils;
 
 public class MainActivity extends Activity implements AccountFragment.IAccountListener {
@@ -26,14 +27,22 @@ public class MainActivity extends Activity implements AccountFragment.IAccountLi
             StateManager.ApplicationManager.INSTANCE.initialize( this );
         }
 
+        if ( !GooglePlayServiceUtils.isGoogleServicesAvailable( this ) ) {
+            Toast.makeText( this, getString( R.string.common_google_play_services_unknown_issue ), Toast.LENGTH_LONG ).show();
+
+            finish();
+
+            return;
+        }
+
         final SharedPreferences preferences = getSharedPreferences( Constants.ACCOUNT_PREFERENCE_NAME, Context.MODE_PRIVATE );
 
         final String username = preferences.getString( Constants.ACCOUNT_PREFERENCE_USERNAME, null );
 
         if ( username != null && !Constants.EMPTY_STRING.equalsIgnoreCase( username ) ) {
             StateManager.ApplicationManager.INSTANCE.setAccount( Account.newBuilder()
-                    .setUsername( username )
-                    .setCreated( preferences.getLong( Constants.ACCOUNT_PREFERENCE_CREATED, -1 ) )
+                    .setUsername(username)
+                    .setCreated(preferences.getLong(Constants.ACCOUNT_PREFERENCE_CREATED, -1))
                 .build() );
 
             startActivity( IntentUtils.getActivityRecognitionIntent( this ) );
@@ -45,7 +54,7 @@ public class MainActivity extends Activity implements AccountFragment.IAccountLi
     @Override
     public void onAccountChanged( String account, boolean stored ) {
         if ( !stored ) {
-            Toast.makeText( this, getString( R.string.account_store_exception ), Toast.LENGTH_SHORT ).show();
+            Toast.makeText( this, getString( R.string.account_store_exception ), Toast.LENGTH_LONG ).show();
 
             finish();
 
