@@ -2,5 +2,11 @@
 <resources>
 
     <color name="black">#151515</color>
+    <color name="light_grey">#2c2c2c</color>
+    <color name="dark_grey">#202020</color>
+    <color name="grey">#6a6a6a</color>
+    <color name="walking_blue">#39bee9</color>
+    <color name="cycling_green">#c2e939</color>
+    <color name="running_orange">#e39713</color>
 
 </resources>
