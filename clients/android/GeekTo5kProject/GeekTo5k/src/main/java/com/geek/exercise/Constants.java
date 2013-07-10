@@ -15,6 +15,8 @@ public class Constants {
 
     public static final String ACCOUNT_PREFERENCE_CREATED = "created";
 
+    public static final String FORCE_KILL_EXTRA = "force";
+
     public static final String EMPTY_STRING = new String();
 
     private Constants() {

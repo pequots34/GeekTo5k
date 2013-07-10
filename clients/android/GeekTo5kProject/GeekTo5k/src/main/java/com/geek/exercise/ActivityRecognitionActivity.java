@@ -54,6 +54,18 @@ public class ActivityRecognitionActivity extends Activity implements ActivityRec
             return;
         }
 
+        if ( !GooglePlayServiceUtils.isGoogleServicesAvailable( this ) ) {
+            Intent intent = IntentUtils.getMainIntent( this );
+
+            intent.putExtra( Constants.FORCE_KILL_EXTRA, true );
+
+            startActivity( intent );
+
+            finish();
+
+            return;
+        }
+
         mLocalBroadcastManager = LocalBroadcastManager.getInstance( this );
 
         mIntentFilter = new IntentFilter( Constants.ACTION_RECOGNITION_SERVICE );

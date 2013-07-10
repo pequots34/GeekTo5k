@@ -35,6 +35,12 @@ public class MainActivity extends Activity implements AccountFragment.IAccountLi
             return;
         }
 
+        if ( getIntent().getBooleanExtra( Constants.FORCE_KILL_EXTRA, false ) ) {
+            finish();
+
+            return;
+        }
+
         final SharedPreferences preferences = getSharedPreferences( Constants.ACCOUNT_PREFERENCE_NAME, Context.MODE_PRIVATE );
 
         final String username = preferences.getString( Constants.ACCOUNT_PREFERENCE_USERNAME, null );
