@@ -28,12 +28,12 @@ public class MainActivity extends Activity implements AccountFragment.IAccountLi
 
         final SharedPreferences preferences = getSharedPreferences( Constants.ACCOUNT_PREFERENCE_NAME, Context.MODE_PRIVATE );
 
-        final String username = preferences.getString( Constants.ACCOUNT_PREFERECE_USERNAME, null );
+        final String username = preferences.getString( Constants.ACCOUNT_PREFERENCE_USERNAME, null );
 
-        if ( username != null && Constants.EMPTY_STRING.equalsIgnoreCase( username ) ) {
+        if ( username != null && !Constants.EMPTY_STRING.equalsIgnoreCase( username ) ) {
             StateManager.ApplicationManager.INSTANCE.setAccount( Account.newBuilder()
                     .setUsername( username )
-                    .setCreated( preferences.getLong( Constants.ACCOUNT_PREFERENCE_CREATED_EXTRA, -1 ) )
+                    .setCreated( preferences.getLong( Constants.ACCOUNT_PREFERENCE_CREATED, -1 ) )
                 .build() );
 
             startActivity( IntentUtils.getActivityRecognitionIntent( this ) );

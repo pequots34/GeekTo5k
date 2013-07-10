@@ -11,9 +11,9 @@ public class Constants {
 
     public static final String ACCOUNT_PREFERENCE_NAME = "AccountPreferenceName";
 
-    public static final String ACCOUNT_PREFERECE_USERNAME = "username";
+    public static final String ACCOUNT_PREFERENCE_USERNAME = "username";
 
-    public static final String ACCOUNT_PREFERENCE_CREATED_EXTRA = "created";
+    public static final String ACCOUNT_PREFERENCE_CREATED = "created";
 
     public static final String EMPTY_STRING = new String();
 

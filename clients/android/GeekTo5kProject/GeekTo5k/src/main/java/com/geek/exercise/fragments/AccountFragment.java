@@ -75,9 +75,9 @@ public class AccountFragment extends Fragment {
 
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences( Constants.ACCOUNT_PREFERENCE_NAME, Context.MODE_PRIVATE ).edit();
 
-                    editor.putString( Constants.ACCOUNT_PREFERENCE_NAME, name );
+                    editor.putString( Constants.ACCOUNT_PREFERENCE_USERNAME, name );
 
-                    editor.putLong( Constants.ACCOUNT_PREFERENCE_CREATED_EXTRA, currentTime );
+                    editor.putLong( Constants.ACCOUNT_PREFERENCE_CREATED, currentTime );
 
                     boolean commited = editor.commit();
 
