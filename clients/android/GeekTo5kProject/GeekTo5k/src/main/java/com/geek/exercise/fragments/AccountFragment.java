@@ -71,15 +71,20 @@ public class AccountFragment extends Fragment {
 
                     final String name = username.getText().toString().trim();
 
-                    SharedPreferences.Editor editor = getActivity().getSharedPreferences( Constants.ACCOUNT_PREF_NAME, Context.MODE_PRIVATE ).edit();
+                    long currentTime = System.currentTimeMillis();
 
-                    editor.putString( Constants.ACCOUNT_PREF_NAME_EXTRA, name );
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences( Constants.ACCOUNT_PREFERENCE_NAME, Context.MODE_PRIVATE ).edit();
+
+                    editor.putString( Constants.ACCOUNT_PREFERENCE_NAME, name );
+
+                    editor.putLong( Constants.ACCOUNT_PREFERENCE_CREATED_EXTRA, currentTime );
 
                     boolean commited = editor.commit();
 
                     if ( commited ) {
                         StateManager.ApplicationManager.INSTANCE.setAccount( Account.newBuilder()
                             .setUsername( name )
+                            .setCreated( currentTime )
                             .build() );
                     }
 

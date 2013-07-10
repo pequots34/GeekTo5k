@@ -10,16 +10,26 @@ public class Account implements Parcelable {
 
     private String mUsername;
 
+    private long mCreated;
+
     public Account( Builder builder ) {
         super();
 
         mUsername = builder.username;
+
+        mCreated = builder.created;
     }
 
     private Account( Parcel in ) {
         super();
 
         mUsername = in.readString();
+
+        mCreated = in.readLong();
+    }
+
+    public long getCreated() {
+        return mCreated;
     }
 
     public String getUsername() {
@@ -34,6 +44,8 @@ public class Account implements Parcelable {
     @Override
     public void writeToParcel( Parcel destination, int flags ) {
         destination.writeString( mUsername );
+
+        destination.writeLong( mCreated );
     }
 
     public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<Account>() {
@@ -55,8 +67,16 @@ public class Account implements Parcelable {
 
         private String username;
 
+        private long created;
+
         public Builder() {
             super();
+        }
+
+        public Builder setCreated( long created ) {
+            this.created = created;
+
+            return this;
         }
 
         public Builder setUsername( String username ) {

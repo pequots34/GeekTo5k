@@ -9,9 +9,13 @@ public class Constants {
 
     public static final String RECOGNITION_SERVICE_INTENT_EXTRA = "activity";
 
-    public static final String ACCOUNT_PREF_NAME = "AccountPrefName";
+    public static final String ACCOUNT_PREFERENCE_NAME = "AccountPreferenceName";
 
-    public static final String ACCOUNT_PREF_NAME_EXTRA = "name";
+    public static final String ACCOUNT_PREFERECE_USERNAME = "username";
+
+    public static final String ACCOUNT_PREFERENCE_CREATED_EXTRA = "created";
+
+    public static final String EMPTY_STRING = new String();
 
     private Constants() {
         super();

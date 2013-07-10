@@ -7,5 +7,6 @@
     <string name="action_stop_recognition_updates">Stop</string>
     <string name="enter_username">ENTER USERNAME</string>
     <string name="account_username_empty">Name is required!</string>
+    <string name="account_store_exception">Oops! Account could\'t be stored!</string>
 
 </resources>
