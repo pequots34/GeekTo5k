@@ -2,7 +2,40 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:gravity="center_horizontal"
+              android:background="@color/black"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+
+    <View
+        android:background="@drawable/bg_cycling_green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_banner_height"/>
+
+    <TextView
+        android:text="@string/app_name"
+        android:textColor="@color/cycling_green"
+        android:textStyle="bold"
+        android:textSize="@dimen/main_app_name_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:text="@string/enter_username"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/main_enter_user_name_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

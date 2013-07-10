@@ -17,4 +17,11 @@ public class MainActivity extends Activity implements AccountFragment.IAccountLi
         setContentView( R.layout.activity_main );
     }
 
+    @Override
+    public void onAccountChanged( String account, boolean stored ) {
+        if ( !stored ) {
+            return;
+        }
+
+    }
 }

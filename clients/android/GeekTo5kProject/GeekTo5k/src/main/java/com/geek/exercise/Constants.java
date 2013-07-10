@@ -9,6 +9,10 @@ public class Constants {
 
     public static final String RECOGNITION_SERVICE_INTENT_EXTRA = "activity";
 
+    public static final String ACCOUNT_PREF_NAME = "AccountPrefName";
+
+    public static final String ACCOUNT_PREF_NAME_EXTRA = "name";
+
     private Constants() {
         super();
 

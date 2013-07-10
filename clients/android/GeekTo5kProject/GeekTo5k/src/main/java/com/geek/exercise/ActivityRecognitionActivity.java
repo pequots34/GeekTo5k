@@ -12,8 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.geek.exercise.fragments.ActivityRecognitionFragment;
+import com.geek.exercise.managers.StateManager;
 import com.geek.exercise.transfer.ActivityRecognition;
-import com.geek.exercise.utilities.GooglePlayServiceUtil;
+import com.geek.exercise.utilities.GooglePlayServiceUtils;
+import com.geek.exercise.utilities.IntentUtils;
 
 /**
  * Created by Pequots34 on 7/9/13.
@@ -43,6 +45,14 @@ public class ActivityRecognitionActivity extends Activity implements ActivityRec
         super.onCreate( savedInstanceState );
 
         setContentView( R.layout.activity_recognition );
+
+        if ( !StateManager.ApplicationManager.INSTANCE.isInitialized() ) {
+            startActivity( IntentUtils.getMainIntent( this ) );
+
+            finish();
+
+            return;
+        }
 
         mLocalBroadcastManager = LocalBroadcastManager.getInstance( this );
 
@@ -80,7 +90,7 @@ public class ActivityRecognitionActivity extends Activity implements ActivityRec
     public boolean onOptionsItemSelected( MenuItem item ) {
         switch ( item.getItemId() ) {
             case R.id.action_start_recognition_updates:
-                if ( GooglePlayServiceUtil.isGoogleServicesAvailable(this) ) {
+                if ( GooglePlayServiceUtils.isGoogleServicesAvailable(this) ) {
                     Toast.makeText(this, "Starting activity request!", Toast.LENGTH_SHORT).show();
 
                     mActivityRecognition.requestUpdates();
@@ -88,7 +98,7 @@ public class ActivityRecognitionActivity extends Activity implements ActivityRec
 
                 return true;
             case R.id.action_stop_recognition_updates:
-                if ( GooglePlayServiceUtil.isGoogleServicesAvailable(this) ) {
+                if ( GooglePlayServiceUtils.isGoogleServicesAvailable(this) ) {
 
                 }
 

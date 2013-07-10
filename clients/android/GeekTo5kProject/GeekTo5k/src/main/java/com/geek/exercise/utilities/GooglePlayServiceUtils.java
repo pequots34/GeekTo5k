@@ -7,9 +7,9 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 /**
  * Created by Pequots34 on 7/9/13.
  */
-public class GooglePlayServiceUtil {
+public class GooglePlayServiceUtils {
 
-    private GooglePlayServiceUtil() {
+    private GooglePlayServiceUtils() {
         super();
 
         throw new InstantiationError();
