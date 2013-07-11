@@ -32,6 +32,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
+import com.google.android.gms.location.DetectedActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -193,7 +194,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
             mBanner.setBackgroundResource( status.getBannerResource() );
 
-            mType.setText( status.getTextResource() );
+            mType.setText(status.getTextResource());
 
             mMe.setTextColor( getResources().getColor( status.getColorStateResource() ) );
 
@@ -230,9 +231,11 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
             request.setTag( MESSAGE_REQUEST_TAG );
 
-            mActivityStatusAdapter.add( message.toMessage() );
+            if ( ActivityStatusUtils.isOnTheMove( activity.getType() ) ) {
+                mActivityStatusAdapter.add( message.toMessage() );
 
-            mActivityStatusAdapter.notifyDataSetChanged();
+                mActivityStatusAdapter.notifyDataSetChanged();
+            }
 
             mRequestQueue.add( request );
 
