@@ -20,7 +20,7 @@
 
     <TextView android:id="@+id/type"
         android:layout_width="wrap_content"
-        android:text="SEARCHING"
+        android:text="@string/searching"
         android:layout_height="wrap_content"/>
 
     <ListView
