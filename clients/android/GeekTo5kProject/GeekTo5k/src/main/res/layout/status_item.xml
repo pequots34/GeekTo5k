@@ -13,14 +13,12 @@
         android:layout_width="wrap_content"
         android:layout_alignParentLeft="true"
         android:id="@+id/status"
-        android:text="BIKE"
         android:layout_centerVertical="true"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/time"
-        android:text="3 HOURS AGO"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_height="wrap_content"/>
