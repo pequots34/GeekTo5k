@@ -1,9 +1,6 @@
 package com.geek.exercise.fragments;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.app.PendingIntent;
+import android.app.*;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -19,7 +16,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.geek.exercise.R;
 import com.geek.exercise.managers.StateManager;
+import com.geek.exercise.network.requests.MessageRequest;
 import com.geek.exercise.services.ActivityIntentService;
+import com.geek.exercise.transfer.Account;
 import com.geek.exercise.transfer.ActivityStatus;
 import com.geek.exercise.utilities.ActivityStatusUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -32,7 +31,7 @@ import org.json.JSONObject;
 /**
  * Created by Pequots34 on 7/8/13.
  */
-public class ActivityStatusFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class ActivityStatusFragment extends ListFragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
     public static final int DETECTION_INTERVAL_SECONDS = 10;
 
@@ -42,9 +41,11 @@ public class ActivityStatusFragment extends Fragment implements GooglePlayServic
 
     public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
+    private static final String MESSAGE_REQUEST_TAG = "message";
+
     private static final String TAG = ActivityStatusFragment.class.getSimpleName();
 
-    private IActivityRecognitionListener mRecognitionListener;
+    private IActivityStatusListener mActivityStatusListener;
 
     private ActivityRecognitionClient mActivityRecognitionClient;
 
@@ -80,7 +81,7 @@ public class ActivityStatusFragment extends Fragment implements GooglePlayServic
         super.onAttach( activity );
 
         try {
-            mRecognitionListener = (IActivityRecognitionListener) activity;
+            mActivityStatusListener = (IActivityStatusListener) activity;
         } catch( ClassCastException e ) {
             throw new ClassCastException( e.toString() );
         }
@@ -95,6 +96,13 @@ public class ActivityStatusFragment extends Fragment implements GooglePlayServic
         }
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        mRequestQueue.cancelAll( MESSAGE_REQUEST_TAG );
+
+        super.onDestroy();
     }
 
     @Override
@@ -129,57 +137,36 @@ public class ActivityStatusFragment extends Fragment implements GooglePlayServic
 
     public void setCurrentActivity( ActivityStatus activity ) {
         if ( activity != null ) {
-            mBanner.setBackgroundResource(ActivityStatusUtils.getLayerDrawableByType(activity.getType()));
+            mBanner.setBackgroundResource( ActivityStatusUtils.getLayerDrawableByType( activity.getType() ) );
+
+            Account account = StateManager.ApplicationManager.INSTANCE.getAccount();
+
+            MessageRequest message = MessageRequest.newBuilder()
+                    .setStatus( activity )
+                    .setUsername( account != null ? account.getUsername() : null )
+                    .build();
+
+            JSONObject data = message.toJSONObject();
+
+            JsonObjectRequest request = new JsonObjectRequest( Request.Method.POST, message.toURL(), data, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse( JSONObject data ) {
+                    Toast.makeText( getActivity(), data.toString(), Toast.LENGTH_SHORT ).show();
+                }
+
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse( VolleyError error ) {
+                    Toast.makeText( getActivity(), error.getMessage(), Toast.LENGTH_LONG ).show();
+                }
+            } );
+
+            request.setTag( MESSAGE_REQUEST_TAG );
+
+            mRequestQueue.add( request );
         }
-    }
-
-    public void setType( String type ) {
-        JSONObject data = new JSONObject();
-
-        try {
-            data.put( "message", type );
-        } catch ( JSONException e ) {
-            e.printStackTrace();
-        }
-
-         /*DetectedActivity probability = result.getMostProbableActivity();
-
-            final int confidence = probability.getConfidence();
-
-            final int type = probability.getType();
-
-            Log.d( TAG, "CONFIDENCE: " + Integer.toString( confidence ) );
-
-            Log.d( TAG, "ACTIVITY TYPE: " + getNameFromType( type ) );
-
-            Intent broadcast = new Intent();
-
-            broadcast.setAction( MainActivity.ACTION_REFRESH_ACTIVITY );
-
-            broadcast.putExtra( "type", getNameFromType( type ) );
-
-            LocalBroadcastManager.getInstance( this ).sendBroadcast( broadcast );
-
-            if ( isOnTheMove( type ) && ( confidence >= 50 ) ) {
-                // Toast.makeText( getApplicationContext(), getNameFromType( type ), Toast.LENGTH_SHORT ).show();
-            }*/
-
-        JsonObjectRequest request = new JsonObjectRequest( Request.Method.POST, "http://geek-to-5k.elasticbeanstalk.com/message/send", data, new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse( JSONObject jsonObject ) {
-                Toast.makeText( getActivity(), jsonObject.toString(), Toast.LENGTH_SHORT ).show();
-            }
-
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse( VolleyError volleyError ) {
-                Toast.makeText( getActivity(), volleyError.getMessage(), Toast.LENGTH_SHORT ).show();
-            }
-        } );
-
-        //mRequestQueue.add( request );
     }
 
     public void setRequestPendingIntent( PendingIntent intent ) {
@@ -217,7 +204,7 @@ public class ActivityStatusFragment extends Fragment implements GooglePlayServic
         return mActivityRecognitionClient;
     }
 
-    public static interface IActivityRecognitionListener {
+    public static interface IActivityStatusListener {
 
     }
 }

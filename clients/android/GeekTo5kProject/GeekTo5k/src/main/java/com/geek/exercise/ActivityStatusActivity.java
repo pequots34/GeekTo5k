@@ -20,7 +20,7 @@ import com.geek.exercise.utilities.IntentUtils;
 /**
  * Created by Pequots34 on 7/9/13.
  */
-public class ActivityStatusActivity extends Activity implements ActivityStatusFragment.IActivityRecognitionListener {
+public class ActivityStatusActivity extends Activity implements ActivityStatusFragment.IActivityStatusListener {
 
     private IntentFilter mIntentFilter;
 
@@ -99,7 +99,7 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
 
                         break;
                     default:
-                        Logger.debug( "CONNECTION_FAILURE_RESOLUTION_REQUEST result code not ok" );
+                        Logger.debug( "connection failure result code not ok" );
 
                         break;
                 }
