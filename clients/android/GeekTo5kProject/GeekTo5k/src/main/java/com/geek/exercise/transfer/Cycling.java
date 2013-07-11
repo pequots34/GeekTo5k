@@ -12,17 +12,17 @@ public class Cycling implements IStatus {
     }
 
     @Override
-    public int getBanner() {
+    public int getBannerResource() {
         return R.drawable.bg_cycling;
     }
 
     @Override
-    public int getColorState() {
+    public int getColorStateResource() {
         return R.color.cycling_green;
     }
 
     @Override
-    public int getText() {
+    public int getTextResource() {
         return R.string.cycling;
     }
 }

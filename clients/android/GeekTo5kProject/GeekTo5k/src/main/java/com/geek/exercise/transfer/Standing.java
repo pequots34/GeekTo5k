@@ -12,17 +12,17 @@ public class Standing implements IStatus {
     }
 
     @Override
-    public int getBanner() {
+    public int getBannerResource() {
         return R.drawable.bg_standing;
     }
 
     @Override
-    public int getColorState() {
+    public int getColorStateResource() {
         return R.color.standing_blue;
     }
 
     @Override
-    public int getText() {
+    public int getTextResource() {
         return R.string.standing;
     }
 }

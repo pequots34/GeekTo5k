@@ -5,10 +5,10 @@ package com.geek.exercise.transfer;
  */
 public interface IStatus {
 
-    public int getBanner();
+    public int getBannerResource();
 
-    public int getColorState();
+    public int getColorStateResource();
 
-    public int getText();
+    public int getTextResource();
 
 }

@@ -12,17 +12,17 @@ public class OnFoot implements IStatus {
     }
 
     @Override
-    public int getBanner() {
+    public int getBannerResource() {
         return R.drawable.bg_on_foot;
     }
 
     @Override
-    public int getColorState() {
+    public int getColorStateResource() {
         return R.color.on_foot_orange;
     }
 
     @Override
-    public int getText() {
+    public int getTextResource() {
         return R.string.on_foot;
     }
 }

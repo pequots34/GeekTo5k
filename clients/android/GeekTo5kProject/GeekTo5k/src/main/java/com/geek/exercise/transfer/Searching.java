@@ -12,17 +12,17 @@ public class Searching implements IStatus {
     }
 
     @Override
-    public int getBanner() {
+    public int getBannerResource() {
         return R.drawable.bg_searching;
     }
 
     @Override
-    public int getColorState() {
+    public int getColorStateResource() {
         return R.color.searching;
     }
 
     @Override
-    public int getText() {
+    public int getTextResource() {
         return R.string.searching;
     }
 }

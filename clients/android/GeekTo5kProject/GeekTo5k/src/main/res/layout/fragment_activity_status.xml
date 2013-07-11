@@ -13,12 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/banner_height"/>
 
-    <TextView
+    <TextView android:id="@+id/me"
         android:layout_width="wrap_content"
         android:text="PLEASE STAND BY"
         android:layout_height="wrap_content"/>
 
-    <TextView
+    <TextView android:id="@+id/type"
         android:layout_width="wrap_content"
         android:text="SEARCHING"
         android:layout_height="wrap_content"/>

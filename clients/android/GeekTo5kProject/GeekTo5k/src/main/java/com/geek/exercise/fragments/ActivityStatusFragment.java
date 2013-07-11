@@ -63,6 +63,10 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
     private View mBanner;
 
+    private TextView mMe;
+
+    private TextView mType;
+
     private RequestQueue mRequestQueue;
 
     private ActivityStatusAdapter mActivityStatusAdapter;
@@ -136,6 +140,10 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
         if ( view != null ) {
             mBanner = view.findViewById( R.id.banner );
+
+            mType = (TextView) view.findViewById( R.id.type );
+
+            mMe = (TextView) view.findViewById( R.id.me );
         }
 
         return view;
@@ -181,7 +189,9 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         if ( activity != null ) {
             IStatus status = activity.getStatusByType();
 
-            mBanner.setBackgroundResource( status.getBanner() );
+            mBanner.setBackgroundResource( status.getBannerResource() );
+
+            mType.setText( status.getTextResource() );
 
             Account account = StateManager.ApplicationManager.INSTANCE.getAccount();
 

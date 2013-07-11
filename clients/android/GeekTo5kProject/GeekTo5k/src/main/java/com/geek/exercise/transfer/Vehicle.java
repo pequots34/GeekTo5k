@@ -12,17 +12,17 @@ public class Vehicle implements IStatus {
     }
 
     @Override
-    public int getBanner() {
+    public int getBannerResource() {
         return R.drawable.bg_vehicle;
     }
 
     @Override
-    public int getColorState() {
+    public int getColorStateResource() {
         return R.color.vehicle_red;
     }
 
     @Override
-    public int getText() {
+    public int getTextResource() {
         return R.string.vehicle;
     }
 }
