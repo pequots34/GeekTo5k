@@ -2,6 +2,8 @@ package com.geek.exercise;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.Toast;
@@ -55,6 +57,7 @@ public class MainActivity extends Activity implements AccountFragment.IAccountLi
 
             finish();
         }
+
     }
 
     @Override

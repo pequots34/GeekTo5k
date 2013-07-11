@@ -59,6 +59,8 @@ public class AccountFragment extends Fragment {
 
             final Button account = (Button) view.findViewById( R.id.account );
 
+            final View banner = view.findViewById( R.id.banner );
+
             account.setOnClickListener( new View.OnClickListener() {
 
                 @Override
