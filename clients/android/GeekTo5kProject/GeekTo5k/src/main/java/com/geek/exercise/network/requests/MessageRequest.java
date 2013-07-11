@@ -3,6 +3,7 @@ package com.geek.exercise.network.requests;
 import com.geek.exercise.Logger;
 import com.geek.exercise.network.INetworkRequest;
 import com.geek.exercise.transfer.ActivityStatus;
+import com.geek.exercise.transfer.Message;
 import com.geek.exercise.utilities.ActivityStatusUtils;
 import com.geek.exercise.utilities.NetworkUtils;
 import com.google.android.gms.location.DetectedActivity;
@@ -24,6 +25,10 @@ public class MessageRequest implements INetworkRequest {
         mActivityStatus = builder.activity;
 
         mUsername = builder.username;
+    }
+
+    public ActivityStatus getActivityStatus() {
+        return mActivityStatus;
     }
 
     public JSONObject toJSONObject() {
@@ -48,26 +53,28 @@ public class MessageRequest implements INetworkRequest {
         return data;
     }
 
-    public JSONObject toPayload() {
-        JSONObject data = new JSONObject();
-
-        if ( mActivityStatus != null ) {
-            try {
-                data.put( "username", mUsername );
-
-                data.put( "activity", ActivityStatusUtils.getActivityFromType( mActivityStatus.getType() ) );
-
-                data.put( "elapsed", mActivityStatus.getElapsedRealtime() );
-
-                data.put( "time", mActivityStatus.getTime() );
-
-                data.put( "type", mActivityStatus.getType() );
-            } catch ( JSONException e ) {
-                Logger.error( e.toString() );
-            }
+    public Message toMessage() {
+        if ( mActivityStatus == null ) {
+            return null;
         }
 
-        return data;
+        return Message.newBuilder()
+                .setActivity( ActivityStatusUtils.getActivityFromType( mActivityStatus.getType() ) )
+                .setElapsedRealtime( mActivityStatus.getElapsedRealtime() )
+                .setTime( mActivityStatus.getTime() )
+                .setType( mActivityStatus.getType() )
+                .setUsername( mUsername )
+                .build();
+    }
+
+    public JSONObject toPayload() {
+        Message message = toMessage();
+
+        if ( message != null ) {
+            return message.toJSONObject();
+        }
+
+        return null;
     }
 
     @Override

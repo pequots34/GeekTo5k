@@ -4,6 +4,7 @@ import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,18 +18,24 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.geek.exercise.Constants;
 import com.geek.exercise.R;
 import com.geek.exercise.managers.StateManager;
 import com.geek.exercise.network.requests.MessageRequest;
 import com.geek.exercise.services.ActivityIntentService;
 import com.geek.exercise.transfer.Account;
 import com.geek.exercise.transfer.ActivityStatus;
+import com.geek.exercise.transfer.Message;
 import com.geek.exercise.utilities.ActivityStatusUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 /**
  * Created by Pequots34 on 7/8/13.
@@ -98,6 +105,28 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         super.onActivityCreated( savedInstanceState );
 
         setListAdapter( mActivityStatusAdapter );
+
+        try {
+            JSONArray collection = getSavedState();
+
+            if ( collection.length() > 0 ) {
+                for ( int i = 0; i < collection.length(); i ++ ) {
+                    JSONObject data = collection.getJSONObject( i );
+
+                    mActivityStatusAdapter.add( Message.newBuilder()
+                        .setActivity( data.optString( "activity", null ) )
+                        .setUsername( data.optString( "username", null ) )
+                        .setElapsedRealtime( data.optLong( "elapsed" ) )
+                        .setTime( data.optLong( "time" ) )
+                            .setType( data.optInt( "type" ) )
+                        .build() );
+                }
+
+                mActivityStatusAdapter.notifyDataSetChanged();
+            }
+        } catch ( JSONException e ) {
+            Toast.makeText( getActivity(), e.toString(), Toast.LENGTH_SHORT ).show();
+        }
     }
 
     @Override
@@ -145,7 +174,6 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 dialog.show();
             }
         }
-
     }
 
     public void setCurrentActivity( ActivityStatus activity ) {
@@ -159,11 +187,12 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                     .setUsername( account != null ? account.getUsername() : null )
                     .build();
 
-            JSONObject data = message.toJSONObject();
+            JSONObject payload = message.toPayload();
 
-            Toast.makeText( getActivity(), message.toPayload().toString(), Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), payload.toString(), Toast.LENGTH_LONG ).show();
 
-            JsonObjectRequest request = new JsonObjectRequest( Request.Method.POST, message.toURL(), data, new Response.Listener<JSONObject>() {
+            final JsonObjectRequest request = new JsonObjectRequest( Request.Method.POST, message.toURL(),
+                    message.toJSONObject(), new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse( JSONObject data ) {
@@ -180,7 +209,13 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
             request.setTag( MESSAGE_REQUEST_TAG );
 
+            mActivityStatusAdapter.add( message.toMessage() );
+
+            mActivityStatusAdapter.notifyDataSetChanged();
+
             mRequestQueue.add( request );
+
+            saveStateToClient( payload );
         }
     }
 
@@ -194,6 +229,30 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
     public void requestUpdates() {
         getActivityRecognitionClient().connect();
+    }
+
+    private JSONArray getSavedState() throws JSONException {
+        return new JSONArray( getSharedPreferences().getString(Constants.PAYLOAD_EXTRA, new JSONArray().toString()) );
+    }
+
+    private void saveStateToClient( JSONObject payload ) {
+        SharedPreferences preferences = getSharedPreferences();
+
+        try {
+            JSONArray collection = getSavedState();
+
+            collection.put( payload );
+
+            preferences.edit()
+                    .putString( Constants.PAYLOAD_EXTRA, collection.toString() )
+                    .commit();
+        } catch ( JSONException e ) {
+            Toast.makeText( getActivity(), e.toString(), Toast.LENGTH_SHORT ).show();
+        }
+    }
+
+    private SharedPreferences getSharedPreferences() {
+        return getActivity().getSharedPreferences( Constants.HISTORY_SHARED_PREFERENCES, Context.MODE_PRIVATE );
     }
 
     private PendingIntent createRequestPendingIntent() {
@@ -223,10 +282,16 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
     }
 
-    public static class ActivityStatusAdapter extends ArrayAdapter<String> {
+    public static class ActivityStatusAdapter extends ArrayAdapter<Message> {
+
+        private static int MODULUS = 2;
+
+        private int mColorState;
 
         public ActivityStatusAdapter( Context context ) {
             super( context, -1 );
+
+            mColorState = getContext().getResources().getColor( R.color.cycling_green );
         }
 
         @Override
@@ -247,11 +312,19 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            if ( holder != null ) {
-                int color = position % 2 == 0 ? getContext().getResources().getColor( R.color.grey ) :
+            Message message = getItem( position );
+
+            if ( holder != null && message != null ) {
+                int color = position % MODULUS == 0 ? getContext().getResources().getColor( R.color.grey ) :
                         getContext().getResources().getColor( R.color.dark_grey );
 
                 convertView.setBackgroundColor( color );
+
+                holder.status.setTextColor( mColorState );
+
+                holder.time.setTextColor( mColorState );
+
+                holder.status.setText( ActivityStatusUtils.getActivityFromType( message.getType() ).toUpperCase( Locale.US ) );
             }
 
             return convertView;
