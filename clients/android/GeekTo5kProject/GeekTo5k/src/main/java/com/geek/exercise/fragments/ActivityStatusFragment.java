@@ -132,6 +132,8 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         } catch ( JSONException e ) {
             Toast.makeText( getActivity(), e.toString(), Toast.LENGTH_SHORT ).show();
         }
+
+        requestUpdates();
     }
 
     @Override
@@ -247,6 +249,8 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
     }
 
     public void requestUpdates() {
+        Toast.makeText( getActivity(), getString( R.string.activity_starting_updates ), Toast.LENGTH_SHORT).show();
+
         getActivityRecognitionClient().connect();
     }
 

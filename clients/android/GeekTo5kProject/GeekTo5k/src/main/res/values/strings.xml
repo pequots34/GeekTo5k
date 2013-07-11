@@ -10,11 +10,13 @@
     <string name="account_store_exception">Oops! Account could\'t be stored!</string>
     <string name="account_update">UPDATE</string>
     <string name="account_banner_title">GEEK TO 5K</string>
-    <string name="activity_starting_updates">Requesting updates!</string>
+    <string name="activity_starting_updates">Requesting new activity updates!</string>
     <string name="cycling">CYCLING</string>
     <string name="on_foot">ON FOOT</string>
     <string name="standing">STANDING</string>
     <string name="searching">SEARCHING</string>
     <string name="vehicle">DRIVING</string>
+    <string name="current_activity">YOUR CURRENTLY</string>
+    <string name="standby">PLEASE STAND BY</string>
 
 </resources>

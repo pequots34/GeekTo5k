@@ -116,8 +116,6 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
     public boolean onOptionsItemSelected( MenuItem item ) {
         switch ( item.getItemId() ) {
             case R.id.action_start_recognition_updates:
-                Toast.makeText( this, getString( R.string.activity_starting_updates ), Toast.LENGTH_SHORT).show();
-
                 mActivityStatus.requestUpdates();
 
                 return true;

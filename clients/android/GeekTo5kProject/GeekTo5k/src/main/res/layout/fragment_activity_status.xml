@@ -14,20 +14,27 @@
         android:layout_height="@dimen/banner_height"/>
 
     <TextView
+        android:textSize="22sp"
+        android:layout_marginTop="20dp"
         android:id="@+id/me"
+        android:fontFamily="sans-serif-light"
         android:layout_width="match_parent"
         android:gravity="center_horizontal"
-        android:text="PLEASE STAND BY"
+        android:text="@string/current_activity"
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:textSize="60sp"
+        android:fontFamily="sans-serif-condensed"
         android:id="@+id/type"
+        android:textStyle="bold"
         android:layout_width="match_parent"
         android:gravity="center_horizontal"
         android:text="@string/searching"
         android:layout_height="wrap_content"/>
 
     <ListView
+        android:layout_marginTop="40dp"
         android:scrollbars="none"
         android:id="@id/android:list"
         android:layout_width="match_parent"

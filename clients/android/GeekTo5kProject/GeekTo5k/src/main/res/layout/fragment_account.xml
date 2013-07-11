@@ -16,6 +16,7 @@
     <TextView
         android:layout_marginTop="20dp"
         android:text="@string/account_banner_title"
+        android:fontFamily="sans-serif-condensed"
         android:textColor="@color/cycling_green"
         android:textStyle="bold"
         android:textSize="@dimen/main_app_name_text_size"
@@ -24,6 +25,7 @@
 
     <TextView
         android:layout_marginTop="5dp"
+        android:fontFamily="sans-serif-light"
         android:text="@string/enter_username"
         android:textColor="@color/grey"
         android:textSize="@dimen/main_enter_user_name_text_size"
