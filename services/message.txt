@@ -4,6 +4,10 @@ Method
 
 POST
 
+{
+    "payload": "",
+}
+
 Error
 
 {

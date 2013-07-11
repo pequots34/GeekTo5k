@@ -42,11 +42,11 @@ public class MessageController {
 			try {
 				JsonNode data = mObjectMapper.readTree( body );
 				
-				JsonNode message = data.get( "message" );
+				JsonNode payload = data.get( "payload" );
 				
-				if ( message != null ) {
+				if ( payload != null ) {
 					Response response = mMessageService.send( MessageRequest.newBuilder()
-							.setMessage( message.getTextValue() )
+							.setPayload( payload.getTextValue() )
 							.build() );
 					
 					if ( response != null ) {

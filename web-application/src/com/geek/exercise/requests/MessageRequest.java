@@ -2,16 +2,16 @@ package com.geek.exercise.requests;
 
 public class MessageRequest {
 
-	private String mMessage;
+	private String mPayload;
 	
 	public MessageRequest( Builder builder ) {
 		super();
 		
-		mMessage = builder.message;
+		mPayload = builder.payload;
 	}
 	
-	public String getMessage() {
-		return mMessage;
+	public String getPayload() {
+		return mPayload;
 	}
 	
 	public static Builder newBuilder() {
@@ -20,10 +20,10 @@ public class MessageRequest {
 	
 	public static final class Builder {
 		
-		private String message;
+		private String payload;
 		
-		public Builder setMessage( String message ) {
-			this.message = message;
+		public Builder setPayload( String payload ) {
+			this.payload = payload;
 			
 			return this;
 		}

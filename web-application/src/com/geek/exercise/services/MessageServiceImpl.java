@@ -25,9 +25,9 @@ public class MessageServiceImpl implements MessageService {
 	
 	@Override
 	public Response send( MessageRequest request ) {
-		if ( request == null || StringUtils.isEmpty( request.getMessage() ) ) {
+		if ( request == null || StringUtils.isEmpty( request.getPayload() ) ) {
 			return ErrorResponse.newBuilder()
-					.setMessage( "message is required!" )
+					.setMessage( "payload is required!" )
 					.build();
 		}
 		
@@ -39,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
 					.build();
 		}
 		
-		return mGoogleMessageService.sendToGoogleCloudMessage( registered.getAccounts(), request.getMessage() );
+		return mGoogleMessageService.sendToGoogleCloudMessage( registered.getAccounts(), request.getPayload() );
 	}
 
 }
