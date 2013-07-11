@@ -5,7 +5,7 @@ Method
 POST
 
 {
-    "payload": "",
+    "payload": ""
 }
 
 Error
@@ -22,7 +22,7 @@ Success
 {
     "tasks": [
         {
-            "message": "Yippie sending payload!",
+            "payload": "Yippie sending payload!",
             "extra": 204,
             "account": {
                 "id": 1,
