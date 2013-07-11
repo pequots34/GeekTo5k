@@ -73,8 +73,8 @@ public class MessageRequest implements INetworkRequest {
     @Override
     public String toURL() {
         return NetworkUtils.newBaseBuilder()
-                .appendPath("message")
-                .appendPath("send")
+                .appendPath( "message" )
+                .appendPath( "send" )
                 .toString();
     }
 

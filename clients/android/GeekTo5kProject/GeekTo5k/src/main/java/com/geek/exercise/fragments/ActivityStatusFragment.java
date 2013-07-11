@@ -1,6 +1,7 @@
 package com.geek.exercise.fragments;
 
 import android.app.*;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,7 +28,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -55,6 +57,8 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
     private RequestQueue mRequestQueue;
 
+    private ActivityStatusAdapter mActivityStatusAdapter;
+
     public ActivityStatusFragment() {
         super();
 
@@ -74,6 +78,8 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         }
 
         mRequestQueue = StateManager.ApplicationManager.INSTANCE.getRequestQueue();
+
+        mActivityStatusAdapter = new ActivityStatusAdapter( getActivity() );
     }
 
     @Override
@@ -85,6 +91,13 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         } catch( ClassCastException e ) {
             throw new ClassCastException( e.toString() );
         }
+    }
+
+    @Override
+    public void onActivityCreated( Bundle savedInstanceState ) {
+        super.onActivityCreated( savedInstanceState );
+
+        setListAdapter( mActivityStatusAdapter );
     }
 
     @Override
@@ -148,6 +161,8 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
             JSONObject data = message.toJSONObject();
 
+            Toast.makeText( getActivity(), message.toPayload().toString(), Toast.LENGTH_LONG ).show();
+
             JsonObjectRequest request = new JsonObjectRequest( Request.Method.POST, message.toURL(), data, new Response.Listener<JSONObject>() {
 
                 @Override
@@ -205,6 +220,49 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
     }
 
     public static interface IActivityStatusListener {
+
+    }
+
+    public static class ActivityStatusAdapter extends ArrayAdapter<String> {
+
+        public ActivityStatusAdapter( Context context ) {
+            super( context, -1 );
+        }
+
+        @Override
+        public View getView( int position, View convertView, ViewGroup parent ) {
+            ViewHolder holder = null;
+
+            if ( convertView == null ) {
+                convertView = LayoutInflater.from( getContext() ).inflate( R.layout.status_item, null );
+
+                if ( convertView != null ) {
+                    holder = new ViewHolder();
+
+                    holder.status = (TextView) convertView.findViewById( R.id.status );
+
+                    holder.time = (TextView) convertView.findViewById( R.id.time );
+                }
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            if ( holder != null ) {
+                int color = position % 2 == 0 ? getContext().getResources().getColor( R.color.grey ) :
+                        getContext().getResources().getColor( R.color.dark_grey );
+
+                convertView.setBackgroundColor( color );
+            }
+
+            return convertView;
+        }
+    }
+
+    public static class ViewHolder {
+
+        public TextView status;
+
+        public TextView time;
 
     }
 }

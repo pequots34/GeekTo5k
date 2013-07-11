@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.geek.exercise.fragments.ActivityStatusFragment;
 import com.geek.exercise.managers.StateManager;
 import com.geek.exercise.transfer.ActivityStatus;
+import com.geek.exercise.utilities.ActivityStatusUtils;
 import com.geek.exercise.utilities.GooglePlayServiceUtils;
 import com.geek.exercise.utilities.IntentUtils;
 
@@ -36,7 +37,9 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
         public void onReceive( Context context, Intent intent ) {
             ActivityStatus recognition = intent.getParcelableExtra( Constants.RECOGNITION_SERVICE_INTENT_EXTRA );
 
-            if ( recognition != null && recognition.compareTo( mCurrentActivity ) != 0 ) {
+            Toast.makeText( ActivityStatusActivity.this, ActivityStatusUtils.getActivityFromType( recognition.getType() ), Toast.LENGTH_LONG ).show();
+
+            if ( recognition != null && recognition.compareTo( mCurrentActivity ) != 0 && ActivityStatusUtils.isOnTheMove( recognition.getType() ) ) {
                 mCurrentActivity = recognition;
 
                 mActivityStatus.setCurrentActivity( mCurrentActivity );

@@ -40,25 +40,6 @@ public class ActivityStatusUtils {
         return null;
     }
 
-    public static Drawable getActionBarDrawableByType( int type, Context context ) {
-        final  Resources resources = context != null ? context.getResources() : null;
-
-        if ( resources != null ) {
-            switch( type ) {
-                case DetectedActivity.IN_VEHICLE:
-                    return resources.getDrawable( R.drawable.ic_car_ab );
-                case DetectedActivity.ON_BICYCLE:
-                    return resources.getDrawable( R.drawable.ic_bike_ab );
-                case DetectedActivity.ON_FOOT:
-                    return resources.getDrawable( R.drawable.ic_walk_ab );
-                default:
-                    return null;
-            }
-        }
-
-        return null;
-    }
-
     public static boolean isOnTheMove( int type ) {
         switch ( type ) {
             case DetectedActivity.STILL :
@@ -73,15 +54,13 @@ public class ActivityStatusUtils {
     public static String getActivityFromType( int type ) {
         switch( type ) {
             case DetectedActivity.IN_VEHICLE:
-                return "in_vehicle";
+                return "driving";
             case DetectedActivity.ON_BICYCLE:
-                return "on_bicycle";
+                return "cycling";
             case DetectedActivity.ON_FOOT:
-                return "on_foot";
+                return "walking";
             case DetectedActivity.STILL:
-                return "still";
-            case DetectedActivity.UNKNOWN:
-                return "unknown";
+                return "standing";
             case DetectedActivity.TILTING:
                 return "tilting";
             default:
