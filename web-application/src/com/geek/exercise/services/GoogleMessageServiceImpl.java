@@ -106,14 +106,14 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 
 		private Account mAccount;
 		
-		private String mMessage;
+		private String mPayload;
 		
-		public MessageTask( Account account, String message ) {
+		public MessageTask( Account account, String payload ) {
 			super();
 			
 			mAccount = account;
 			
-			mMessage = message;
+			mPayload = payload;
 		}
 		
 		@Override
@@ -164,7 +164,7 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 				
 				method.addHeader( "Authorization", GoogleCloudMessageUtil.toAuthorizationHeader( token ) );
 				
-				GoogleMessage payload = new GoogleMessage( mMessage );
+				GoogleMessage payload = new GoogleMessage( mPayload );
 				
 				payload.setChannelId( mAccount.getChannelId() );
 				
@@ -179,7 +179,7 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 				return MessageTaskResponse.newBuilder()
 						.setExtra( statusCode )
 						.setAccount( mAccount )
-						.setMessage( mMessage )
+						.setPayload( mPayload )
 						.setExecuted( statusCode == 204 )
 					.build();
 			}
@@ -199,7 +199,7 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 		
 		private Object mExtra;
 		
-		private String mMessage;
+		private String mPayload;
 		
 		public MessageTaskResponse( Builder builder ) {
 			super();
@@ -210,7 +210,7 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 			
 			mExtra = builder.extra;
 			
-			mMessage = builder.message;
+			mPayload = builder.payload;
 		}
 		
 		public boolean executed() {
@@ -221,8 +221,8 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 			return mExtra;
 		}
 		
-		public String getMessage() {
-			return mMessage;
+		public String getPayload() {
+			return mPayload;
 		}
 		
 		public Account getAccount() {
@@ -241,10 +241,10 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 			
 			private Object extra;
 			
-			private String message;
+			private String payload;
 			
-			public Builder setMessage( String message ) {
-				this.message = message;
+			public Builder setPayload( String payload ) {
+				this.payload = payload;
 				
 				return this;
 			}

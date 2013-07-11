@@ -8,6 +8,8 @@
 
             <solid android:color="@color/cycling_green"/>
 
+            <size android:height="100dp" />
+
         </shape>
     </item>
 
