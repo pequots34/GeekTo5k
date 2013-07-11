@@ -32,7 +32,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
-import com.google.android.gms.location.DetectedActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,13 +43,13 @@ import java.util.Locale;
  */
 public class ActivityStatusFragment extends ListFragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
-    public static final int DETECTION_INTERVAL_SECONDS = 10;
-
-    public static final int MILLISECONDS_PER_SECOND = 1000;
-
-    public static final int DETECTION_INTERVAL_MILLISECONDS = MILLISECONDS_PER_SECOND * DETECTION_INTERVAL_SECONDS;
-
     public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
+    private static final int DETECTION_INTERVAL_SECONDS = 20;
+
+    private static final int MILLISECONDS_PER_SECOND = 1000;
+
+    private static final int DETECTION_INTERVAL_MILLISECONDS = MILLISECONDS_PER_SECOND * DETECTION_INTERVAL_SECONDS;
 
     private static final String MESSAGE_REQUEST_TAG = "message";
 
@@ -194,7 +193,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
             mBanner.setBackgroundResource( status.getBannerResource() );
 
-            mType.setText(status.getTextResource());
+            mType.setText( status.getTextResource() );
 
             mMe.setTextColor( getResources().getColor( status.getColorStateResource() ) );
 
@@ -235,11 +234,11 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 mActivityStatusAdapter.add( message.toMessage() );
 
                 mActivityStatusAdapter.notifyDataSetChanged();
+
+                saveStateToClient( payload );
             }
 
-            mRequestQueue.add( request );
-
-            saveStateToClient( payload );
+            //mRequestQueue.add( request );
         }
     }
 
@@ -317,7 +316,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         public ActivityStatusAdapter( Context context ) {
             super( context, -1 );
 
-            mColorState = getContext().getResources().getColor( R.color.cycling_green );
+            mColorState = R.color.searching;
         }
 
         public void setColorState( int color ) {
@@ -350,9 +349,9 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
                 convertView.setBackgroundColor( color );
 
-                holder.status.setTextColor( mColorState );
+                holder.status.setTextColor( getContext().getResources().getColor( mColorState ) );
 
-                holder.time.setTextColor( mColorState );
+                holder.time.setTextColor(  getContext().getResources().getColor( mColorState ) );
 
                 holder.status.setText( ActivityStatusUtils.getActivityFromType( message.getType() ).toUpperCase( Locale.US ) );
             }

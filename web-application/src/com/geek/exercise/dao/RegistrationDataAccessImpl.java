@@ -95,13 +95,15 @@ public class RegistrationDataAccessImpl extends NamedParameterJdbcDaoSupport imp
 	
 	@Override
 	public long flush() {
-		if ( PropertyPlaceholderUtil.useCacheStorage() ) {
-			long size = getLocalCache().size();
-			
-			getLocalCache().invalidateAll();
-			
-			return size;
-		}
+		try {
+			if ( PropertyPlaceholderUtil.useCacheStorage() ) {
+				long size = getLocalCache().size();
+				
+				getLocalCache().invalidateAll();
+				
+				return size;
+			}
+		} catch( DataAccessException e ) { }
 		
 		return 0;
 	}
