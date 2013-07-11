@@ -8,7 +8,7 @@ import com.google.android.gms.location.DetectedActivity;
 /**
  * Created by Pequots34 on 7/9/13.
  */
-public class ActivityRecognition implements Parcelable {
+public class ActivityStatus implements Parcelable, Comparable<ActivityStatus> {
 
     private ActivityRecognitionResult mRecognition;
 
@@ -18,7 +18,7 @@ public class ActivityRecognition implements Parcelable {
 
     private DetectedActivity mProbability;
 
-    public ActivityRecognition( Builder builder ) {
+    public ActivityStatus(Builder builder) {
         super();
 
         mRecognition = builder.recognition;
@@ -32,7 +32,7 @@ public class ActivityRecognition implements Parcelable {
         }
     }
 
-    private ActivityRecognition( Parcel in ) {
+    private ActivityStatus(Parcel in) {
         super();
 
         mRecognition = in.readParcelable( ActivityRecognitionResult.class.getClassLoader() );
@@ -42,6 +42,14 @@ public class ActivityRecognition implements Parcelable {
         mElapsedRealtime = in.readLong();
 
         mProbability = in.readParcelable( DetectedActivity.class.getClassLoader() );
+    }
+
+    public int getType() {
+        if ( mProbability != null ) {
+            return mProbability.getType();
+        }
+
+        return -34;
     }
 
     public DetectedActivity getProbability() {
@@ -58,6 +66,15 @@ public class ActivityRecognition implements Parcelable {
 
     public ActivityRecognitionResult getRecognition() {
         return mRecognition;
+    }
+
+    @Override
+    public int compareTo( ActivityStatus another ) {
+        if ( another == null ) {
+            return -1;
+        }
+
+        return getType() - another.getType();
     }
 
     @Override
@@ -80,14 +97,14 @@ public class ActivityRecognition implements Parcelable {
         return new Builder();
     }
 
-    public static final Parcelable.Creator<ActivityRecognition> CREATOR = new Parcelable.Creator<ActivityRecognition>() {
+    public static final Parcelable.Creator<ActivityStatus> CREATOR = new Parcelable.Creator<ActivityStatus>() {
 
-        public ActivityRecognition createFromParcel(Parcel in) {
-            return new ActivityRecognition( in );
+        public ActivityStatus createFromParcel(Parcel in) {
+            return new ActivityStatus( in );
         }
 
-        public ActivityRecognition[] newArray( int size ) {
-            return new ActivityRecognition[ size ];
+        public ActivityStatus[] newArray( int size ) {
+            return new ActivityStatus[ size ];
         }
     };
 
@@ -105,8 +122,8 @@ public class ActivityRecognition implements Parcelable {
             return this;
         }
 
-        public ActivityRecognition build() {
-            return new ActivityRecognition( this );
+        public ActivityStatus build() {
+            return new ActivityStatus( this );
         }
     }
 }

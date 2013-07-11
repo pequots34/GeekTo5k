@@ -2,7 +2,7 @@ package com.geek.exercise.utilities;
 
 import android.content.Context;
 import android.content.Intent;
-import com.geek.exercise.ActivityRecognitionActivity;
+import com.geek.exercise.ActivityStatusActivity;
 import com.geek.exercise.MainActivity;
 
 /**
@@ -25,7 +25,7 @@ public class IntentUtils {
     }
 
     public static Intent getActivityRecognitionIntent( Context context ) {
-        Intent intent = new Intent( context, ActivityRecognitionActivity.class );
+        Intent intent = new Intent( context, ActivityStatusActivity.class );
 
         return intent;
     }

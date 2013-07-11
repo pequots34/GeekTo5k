@@ -10,5 +10,6 @@
     <string name="account_store_exception">Oops! Account could\'t be stored!</string>
     <string name="account_update">UPDATE</string>
     <string name="account_banner_title">GEEK TO 5K</string>
+    <string name="activity_starting_updates">Requesting updates!</string>
 
 </resources>

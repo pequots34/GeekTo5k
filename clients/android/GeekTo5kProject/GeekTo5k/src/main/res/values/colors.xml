@@ -7,6 +7,6 @@
     <color name="grey">#6a6a6a</color>
     <color name="walking_blue">#39bee9</color>
     <color name="cycling_green">#c2e939</color>
-    <color name="running_orange">#e39713</color>
+    <color name="car_orange">#e39713</color>
 
 </resources>

@@ -7,12 +7,10 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,6 +20,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.geek.exercise.R;
 import com.geek.exercise.managers.StateManager;
 import com.geek.exercise.services.ActivityIntentService;
+import com.geek.exercise.transfer.ActivityStatus;
+import com.geek.exercise.utilities.ActivityStatusUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -32,7 +32,7 @@ import org.json.JSONObject;
 /**
  * Created by Pequots34 on 7/8/13.
  */
-public class ActivityRecognitionFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class ActivityStatusFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
     public static final int DETECTION_INTERVAL_SECONDS = 10;
 
@@ -42,7 +42,7 @@ public class ActivityRecognitionFragment extends Fragment implements GooglePlayS
 
     public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    private static final String TAG = ActivityRecognitionFragment.class.getSimpleName();
+    private static final String TAG = ActivityStatusFragment.class.getSimpleName();
 
     private IActivityRecognitionListener mRecognitionListener;
 
@@ -50,11 +50,11 @@ public class ActivityRecognitionFragment extends Fragment implements GooglePlayS
 
     private PendingIntent mActivityRecognitionPendingIntent;
 
-    private TextView mType;
+    private View mBanner;
 
     private RequestQueue mRequestQueue;
 
-    public ActivityRecognitionFragment() {
+    public ActivityStatusFragment() {
         super();
 
         mActivityRecognitionPendingIntent = null;
@@ -88,11 +88,10 @@ public class ActivityRecognitionFragment extends Fragment implements GooglePlayS
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
-        View view = inflater.inflate( R.layout.fragment_activity_recognition, null, false );
+        View view = inflater.inflate( R.layout.fragment_activity_status, null, false );
 
         if ( view != null ) {
-            mType = (TextView) view.findViewById( R.id.type );
-
+            mBanner = view.findViewById( R.id.banner );
         }
 
         return view;
@@ -128,13 +127,13 @@ public class ActivityRecognitionFragment extends Fragment implements GooglePlayS
 
     }
 
-    public void setType( String type ) {
-        if ( !TextUtils.isEmpty( mType.getText() ) ) {
-            type = TextUtils.concat( mType.getText(), "\n", type ).toString();
+    public void setCurrentActivity( ActivityStatus activity ) {
+        if ( activity != null ) {
+            mBanner.setBackgroundResource(ActivityStatusUtils.getLayerDrawableByType(activity.getType()));
         }
+    }
 
-        mType.setText( type );
-
+    public void setType( String type ) {
         JSONObject data = new JSONObject();
 
         try {

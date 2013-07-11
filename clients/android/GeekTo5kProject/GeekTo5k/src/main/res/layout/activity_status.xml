@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <fragment
-    android:name="com.geek.exercise.fragments.ActivityRecognitionFragment"
+    android:name="com.geek.exercise.fragments.ActivityStatusFragment"
     android:layout_width="match_parent"
     android:id="@+id/recognition"
     android:layout_height="match_parent"

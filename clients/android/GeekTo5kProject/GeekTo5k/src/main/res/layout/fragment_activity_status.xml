@@ -7,9 +7,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView
+    <View
+        android:id="@+id/banner"
+        android:background="@drawable/bg_cycling"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/type"/>
+        android:layout_height="@dimen/banner_height"/>
 
 </LinearLayout>

@@ -11,32 +11,40 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-import com.geek.exercise.fragments.ActivityRecognitionFragment;
+import com.geek.exercise.fragments.ActivityStatusFragment;
 import com.geek.exercise.managers.StateManager;
-import com.geek.exercise.transfer.ActivityRecognition;
+import com.geek.exercise.transfer.ActivityStatus;
 import com.geek.exercise.utilities.GooglePlayServiceUtils;
 import com.geek.exercise.utilities.IntentUtils;
 
 /**
  * Created by Pequots34 on 7/9/13.
  */
-public class ActivityRecognitionActivity extends Activity implements ActivityRecognitionFragment.IActivityRecognitionListener {
+public class ActivityStatusActivity extends Activity implements ActivityStatusFragment.IActivityRecognitionListener {
 
     private IntentFilter mIntentFilter;
 
     private LocalBroadcastManager mLocalBroadcastManager;
 
-    private ActivityRecognitionFragment mActivityRecognition;
+    private ActivityStatusFragment mActivityStatus;
+
+    private ActivityStatus mCurrentActivity;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive( Context context, Intent intent ) {
-            ActivityRecognition recognition = intent.getParcelableExtra( Constants.RECOGNITION_SERVICE_INTENT_EXTRA );
+            ActivityStatus recognition = intent.getParcelableExtra( Constants.RECOGNITION_SERVICE_INTENT_EXTRA );
+
+            if ( recognition != null && recognition.compareTo( mCurrentActivity ) != 0 ) {
+                mCurrentActivity = recognition;
+
+                mActivityStatus.setCurrentActivity( mCurrentActivity );
+            }
         }
     };
 
-    public ActivityRecognitionActivity() {
+    public ActivityStatusActivity() {
         super();
     }
 
@@ -44,7 +52,7 @@ public class ActivityRecognitionActivity extends Activity implements ActivityRec
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
 
-        setContentView( R.layout.activity_recognition );
+        setContentView( R.layout.activity_status);
 
         if ( !StateManager.ApplicationManager.INSTANCE.isInitialized() ) {
             startActivity( IntentUtils.getMainIntent( this ) );
@@ -70,14 +78,14 @@ public class ActivityRecognitionActivity extends Activity implements ActivityRec
 
         mIntentFilter = new IntentFilter( Constants.ACTION_RECOGNITION_SERVICE );
 
-        mActivityRecognition = (ActivityRecognitionFragment) getFragmentManager().findFragmentById( R.id.recognition );
+        mActivityStatus = (ActivityStatusFragment) getFragmentManager().findFragmentById( R.id.recognition );
     }
 
     @Override
     public boolean onCreateOptionsMenu( Menu menu ) {
         MenuInflater inflater = getMenuInflater();
 
-        inflater.inflate( R.menu.activity_recognition, menu );
+        inflater.inflate( R.menu.activity_status, menu );
 
         return true;
     }
@@ -85,11 +93,14 @@ public class ActivityRecognitionActivity extends Activity implements ActivityRec
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent intent ) {
         switch ( requestCode ) {
-            case ActivityRecognitionFragment.CONNECTION_FAILURE_RESOLUTION_REQUEST:
+            case ActivityStatusFragment.CONNECTION_FAILURE_RESOLUTION_REQUEST:
                 switch( resultCode ) {
                     case RESULT_OK:
+
                         break;
                     default:
+                        Logger.debug( "CONNECTION_FAILURE_RESOLUTION_REQUEST result code not ok" );
+
                         break;
                 }
                 break;
@@ -102,17 +113,13 @@ public class ActivityRecognitionActivity extends Activity implements ActivityRec
     public boolean onOptionsItemSelected( MenuItem item ) {
         switch ( item.getItemId() ) {
             case R.id.action_start_recognition_updates:
-                if ( GooglePlayServiceUtils.isGoogleServicesAvailable(this) ) {
-                    Toast.makeText(this, "Starting activity request!", Toast.LENGTH_SHORT).show();
+                Toast.makeText( this, getString( R.string.activity_starting_updates ), Toast.LENGTH_SHORT).show();
 
-                    mActivityRecognition.requestUpdates();
-                }
+                mActivityStatus.requestUpdates();
 
                 return true;
             case R.id.action_stop_recognition_updates:
-                if ( GooglePlayServiceUtils.isGoogleServicesAvailable(this) ) {
-
-                }
+                //TODO: STOP UPDATES
 
                 return true;
             default:

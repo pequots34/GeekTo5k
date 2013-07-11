@@ -3,7 +3,7 @@ package com.geek.exercise.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import com.geek.exercise.transfer.ActivityRecognition;
+import com.geek.exercise.transfer.ActivityStatus;
 import com.geek.exercise.Constants;
 import com.google.android.gms.location.ActivityRecognitionResult;
 
@@ -25,7 +25,7 @@ public class ActivityIntentService extends IntentService {
 
             broadcast.setAction( Constants.ACTION_RECOGNITION_SERVICE );
 
-            broadcast.putExtra( Constants.RECOGNITION_SERVICE_INTENT_EXTRA, ActivityRecognition.newBuilder()
+            broadcast.putExtra( Constants.RECOGNITION_SERVICE_INTENT_EXTRA, ActivityStatus.newBuilder()
                     .setRecognitionResult( ActivityRecognitionResult.extractResult( intent ) )
                     .build() );
 

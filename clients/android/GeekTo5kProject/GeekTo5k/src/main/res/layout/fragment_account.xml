@@ -9,9 +9,9 @@
 
     <View
         android:id="@+id/banner"
-        android:background="@drawable/bg_layered_cycling_green"
+        android:background="@drawable/bg_cycling"
         android:layout_width="match_parent"
-        android:layout_height="90dp"/>
+        android:layout_height="@dimen/banner_height"/>
 
     <TextView
         android:layout_marginTop="20dp"
@@ -44,7 +44,7 @@
         android:text="@string/account_update"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:background="@drawable/btn_green_button_selector"
+        android:background="@drawable/btn_green_button"
         android:id="@+id/account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
