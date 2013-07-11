@@ -2,6 +2,7 @@ package com.geek.exercise.transfer;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.geek.exercise.R;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
@@ -91,6 +92,21 @@ public class ActivityStatus implements Parcelable, Comparable<ActivityStatus> {
         destination.writeLong( mElapsedRealtime );
 
         destination.writeParcelable( mProbability, flags );
+    }
+
+    public IStatus getStatusByType() {
+        switch( getType() ) {
+            case DetectedActivity.IN_VEHICLE:
+                return new Vehicle();
+            case DetectedActivity.ON_BICYCLE:
+                return new Cycling();
+            case DetectedActivity.ON_FOOT:
+                return new OnFoot();
+            case DetectedActivity.STILL:
+                return new Standing();
+            default:
+                return new Searching();
+        }
     }
 
     public static Builder newBuilder() {

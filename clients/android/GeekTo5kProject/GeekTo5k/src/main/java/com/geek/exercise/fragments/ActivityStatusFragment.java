@@ -25,6 +25,7 @@ import com.geek.exercise.network.requests.MessageRequest;
 import com.geek.exercise.services.ActivityIntentService;
 import com.geek.exercise.transfer.Account;
 import com.geek.exercise.transfer.ActivityStatus;
+import com.geek.exercise.transfer.IStatus;
 import com.geek.exercise.transfer.Message;
 import com.geek.exercise.utilities.ActivityStatusUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -113,13 +114,13 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 for ( int i = 0; i < collection.length(); i ++ ) {
                     JSONObject data = collection.getJSONObject( i );
 
-                    mActivityStatusAdapter.add( Message.newBuilder()
-                        .setActivity( data.optString( "activity", null ) )
-                        .setUsername( data.optString( "username", null ) )
-                        .setElapsedRealtime( data.optLong( "elapsed" ) )
-                        .setTime( data.optLong( "time" ) )
-                            .setType( data.optInt( "type" ) )
-                        .build() );
+                    mActivityStatusAdapter.add(Message.newBuilder()
+                            .setActivity(data.optString("activity", null))
+                            .setUsername(data.optString("username", null))
+                            .setElapsedRealtime(data.optLong("elapsed"))
+                            .setTime(data.optLong("time"))
+                            .setType(data.optInt("type"))
+                            .build());
                 }
 
                 mActivityStatusAdapter.notifyDataSetChanged();
@@ -178,7 +179,9 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
     public void setCurrentActivity( ActivityStatus activity ) {
         if ( activity != null ) {
-            mBanner.setBackgroundResource( ActivityStatusUtils.getLayerDrawableByType( activity.getType() ) );
+            IStatus status = activity.getStatusByType();
+
+            mBanner.setBackgroundResource( status.getBanner() );
 
             Account account = StateManager.ApplicationManager.INSTANCE.getAccount();
 

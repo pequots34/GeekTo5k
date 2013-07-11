@@ -39,7 +39,7 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
 
             Toast.makeText( ActivityStatusActivity.this, ActivityStatusUtils.getActivityFromType( recognition.getType() ), Toast.LENGTH_LONG ).show();
 
-            if ( recognition != null && recognition.compareTo( mCurrentActivity ) != 0 ) {
+            if ( recognition != null && recognition.compareTo( mCurrentActivity ) != 0 && ActivityStatusUtils.isOnTheMove( recognition.getType() ) ) {
                 mCurrentActivity = recognition;
 
                 mActivityStatus.setCurrentActivity( mCurrentActivity );

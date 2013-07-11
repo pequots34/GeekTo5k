@@ -17,29 +17,6 @@ public class ActivityStatusUtils {
         throw new InstantiationError();
     }
 
-    public static int getLayerDrawableByType( int type ) {
-        switch( type ) {
-            case DetectedActivity.IN_VEHICLE:
-                return R.drawable.bg_vehicle;
-            case DetectedActivity.ON_BICYCLE:
-                return R.drawable.bg_cycling;
-            case DetectedActivity.ON_FOOT:
-                return R.drawable.bg_walking;
-            default:
-                return R.drawable.bg_cycling;
-        }
-    }
-
-    public static Drawable getLayerDrawableByType( int type, Context context ) {
-        final  Resources resources = context != null ? context.getResources() : null;
-
-        if ( resources != null ) {
-            return resources.getDrawable( getLayerDrawableByType( type ) );
-        }
-
-        return null;
-    }
-
     public static boolean isOnTheMove( int type ) {
         switch ( type ) {
             case DetectedActivity.STILL :
