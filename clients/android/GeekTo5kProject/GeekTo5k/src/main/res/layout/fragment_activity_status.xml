@@ -9,17 +9,21 @@
 
     <View
         android:id="@+id/banner"
-        android:background="@drawable/bg_cycling"
+        android:background="@drawable/bg_searching"
         android:layout_width="match_parent"
         android:layout_height="@dimen/banner_height"/>
 
-    <TextView android:id="@+id/me"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/me"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
         android:text="PLEASE STAND BY"
         android:layout_height="wrap_content"/>
 
-    <TextView android:id="@+id/type"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
         android:text="@string/searching"
         android:layout_height="wrap_content"/>
 

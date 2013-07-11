@@ -1,9 +1,5 @@
 package com.geek.exercise.utilities;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import com.geek.exercise.R;
 import com.google.android.gms.location.DetectedActivity;
 
 /**
@@ -35,7 +31,7 @@ public class ActivityStatusUtils {
             case DetectedActivity.ON_BICYCLE:
                 return "cycling";
             case DetectedActivity.ON_FOOT:
-                return "walking";
+                return "on foot";
             case DetectedActivity.STILL:
                 return "standing";
             case DetectedActivity.TILTING:

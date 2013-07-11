@@ -193,6 +193,12 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
             mType.setText( status.getTextResource() );
 
+            mMe.setTextColor( getResources().getColor( status.getColorStateResource() ) );
+
+            mType.setTextColor( getResources().getColor( status.getColorStateResource() ) );
+
+            mActivityStatusAdapter.setColorState( status.getColorStateResource() );
+
             Account account = StateManager.ApplicationManager.INSTANCE.getAccount();
 
             MessageRequest message = MessageRequest.newBuilder()
@@ -305,6 +311,10 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
             super( context, -1 );
 
             mColorState = getContext().getResources().getColor( R.color.cycling_green );
+        }
+
+        public void setColorState( int color ) {
+            mColorState = color;
         }
 
         @Override
