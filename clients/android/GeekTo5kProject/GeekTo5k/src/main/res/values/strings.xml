@@ -16,7 +16,7 @@
     <string name="standing">STANDING</string>
     <string name="searching">SEARCHING</string>
     <string name="vehicle">DRIVING</string>
-    <string name="current_activity">YOUR CURRENTLY</string>
+    <string name="current_activity">YOUR\'RE CURRENTLY</string>
     <string name="standby">PLEASE STAND BY</string>
 
 </resources>

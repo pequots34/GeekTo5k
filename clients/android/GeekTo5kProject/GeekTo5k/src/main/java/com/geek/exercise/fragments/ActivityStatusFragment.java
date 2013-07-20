@@ -238,7 +238,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 saveStateToClient( payload );
             }
 
-            //mRequestQueue.add( request );
+           // mRequestQueue.add( request );
         }
     }
 
@@ -351,7 +351,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
                 holder.status.setTextColor( getContext().getResources().getColor( mColorState ) );
 
-                holder.time.setTextColor(  getContext().getResources().getColor( mColorState ) );
+                holder.time.setTextColor( getContext().getResources().getColor( mColorState ) );
 
                 holder.status.setText( ActivityStatusUtils.getActivityFromType( message.getType() ).toUpperCase( Locale.US ) );
             }
