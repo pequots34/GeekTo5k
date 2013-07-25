@@ -100,6 +100,10 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
             case ActivityStatusFragment.CONNECTION_FAILURE_RESOLUTION_REQUEST:
                 switch( resultCode ) {
                     case RESULT_OK:
+                        Toast.makeText( this, getString( R.string.google_play_services_resolved_connection_error ), Toast.LENGTH_SHORT ).show();
+
+                        mActivityStatus.requestUpdates();
+
                         break;
                     default:
                         Logger.debug( "connection failure result code not ok" );
@@ -108,8 +112,12 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
                 }
                 break;
             default:
-
         }
+    }
+
+    @Override
+    public void onActivityStatusPosted( ActivityStatus status ) {
+        Toast.makeText( this, getString( R.string.network_status_success ), Toast.LENGTH_SHORT ).show();
     }
 
     @Override

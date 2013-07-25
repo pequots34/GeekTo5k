@@ -189,7 +189,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
     }
 
     public void removeUpdates() {
-        if ( mActivityRecognitionPendingIntent != null &&  getActivityRecognitionClient().isConnected() ) {
+        if ( mActivityRecognitionPendingIntent != null && getActivityRecognitionClient().isConnected() ) {
             try {
                 getActivityRecognitionClient().removeActivityUpdates( mActivityRecognitionPendingIntent );
 
@@ -206,7 +206,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         }
     }
 
-    public void setCurrentActivity( ActivityStatus activity ) {
+    public void setCurrentActivity( final ActivityStatus activity ) {
         if ( activity != null ) {
             IStatus status = activity.getStatusByType();
 
@@ -234,11 +234,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
                 @Override
                 public void onResponse( JSONObject data ) {
-                    Context context = getActivity();
-
-                    if ( context != null ) {
-                        Toast.makeText( context, getString( R.string.network_status_success ), Toast.LENGTH_SHORT ).show();
-                    }
+                    mActivityStatusListener.onActivityStatusPosted( activity );
                 }
 
             }, new Response.ErrorListener() {
@@ -360,6 +356,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
     public static interface IActivityStatusListener {
 
+        public void onActivityStatusPosted( ActivityStatus status );
     }
 
     public static class ActivityStatusAdapter extends ArrayAdapter<Message> {
