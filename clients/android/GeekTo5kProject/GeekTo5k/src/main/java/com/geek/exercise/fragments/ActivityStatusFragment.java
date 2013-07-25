@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.geek.exercise.Constants;
+import com.geek.exercise.Logger;
 import com.geek.exercise.R;
 import com.geek.exercise.managers.StateManager;
 import com.geek.exercise.network.requests.MessageRequest;
@@ -222,8 +223,6 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
             mType.setTextColor( getResources().getColor( color ) );
 
-            mActivityStatusAdapter.setColorState( color );
-
             Account account = StateManager.ApplicationManager.INSTANCE.getAccount();
 
             MessageRequest message = MessageRequest.newBuilder()
@@ -258,10 +257,12 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
             if ( ActivityStatusUtils.isOnTheMove( activity.getType() ) ) {
                 mActivityStatusAdapter.add( message.toMessage() );
 
-                mActivityStatusAdapter.notifyDataSetChanged();
-
                 saveStateToClient( payload );
             }
+
+            mActivityStatusAdapter.setColorState( color );
+
+            mActivityStatusAdapter.notifyDataSetChanged();
 
             Context context = getActivity();
 
@@ -269,7 +270,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 Toast.makeText( context, getString( R.string.network_posting_status ), Toast.LENGTH_SHORT ).show();
             }
 
-            //mRequestQueue.add( request );
+            mRequestQueue.add( request );
         }
     }
 
@@ -368,8 +369,6 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
     public static class ActivityStatusAdapter extends ArrayAdapter<Message> {
 
-        private static int MODULUS = 2;
-
         private int mColorState;
 
         public ActivityStatusAdapter( Context context ) {
@@ -395,6 +394,8 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                     holder.status = (TextView) convertView.findViewById( R.id.status );
 
                     holder.time = (TextView) convertView.findViewById( R.id.time );
+
+                    convertView.setTag( holder );
                 }
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -403,8 +404,13 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
             Message message = getItem( position );
 
             if ( holder != null && message != null ) {
-                int color = position % MODULUS == 0 ? getContext().getResources().getColor( R.color.grey ) :
-                        getContext().getResources().getColor( R.color.dark_grey );
+                int color;
+
+                if (  ( position % 2 ) == 0 ) {
+                    color = getContext().getResources().getColor( R.color.grey );
+                } else {
+                    color = getContext().getResources().getColor( R.color.dark_grey );
+                }
 
                 convertView.setBackgroundColor( color );
 
