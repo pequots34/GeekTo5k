@@ -130,13 +130,18 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 mActivityStatusAdapter.notifyDataSetChanged();
             }
         } catch ( JSONException e ) {
-            Toast.makeText( getActivity(), e.toString(), Toast.LENGTH_SHORT ).show();
+            Context context = getActivity();
+
+            if ( context != null ) {
+                Toast.makeText( context, e.toString(), Toast.LENGTH_SHORT ).show();
+            }
         }
     }
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
-        View view = inflater.inflate( R.layout.fragment_activity_status, null, false );
+        View view = inflater != null ? inflater.inflate( R.layout.fragment_activity_status, null, false ) :
+                LayoutInflater.from( getActivity() ).inflate(R.layout.fragment_activity_status, null, false) ;
 
         if ( view != null ) {
             mBanner = view.findViewById( R.id.banner );
@@ -159,8 +164,6 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
     @Override
     public void onConnected( Bundle bundle ) {
         getActivityRecognitionClient().requestActivityUpdates( DETECTION_INTERVAL_MILLISECONDS, createRequestPendingIntent() );
-
-        getActivityRecognitionClient().disconnect();
     }
 
     @Override
@@ -186,7 +189,21 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
     }
 
     public void removeUpdates() {
+        if ( mActivityRecognitionPendingIntent != null &&  getActivityRecognitionClient().isConnected() ) {
+            try {
+                getActivityRecognitionClient().removeActivityUpdates( mActivityRecognitionPendingIntent );
 
+                mActivityRecognitionPendingIntent.cancel();
+
+                getActivityRecognitionClient().disconnect();
+            } catch( IllegalStateException e ) {
+                Context context = getActivity();
+
+                if ( context != null ) {
+                    Toast.makeText( context, e.toString(), Toast.LENGTH_SHORT ).show();
+                }
+            }
+        }
     }
 
     public void setCurrentActivity( ActivityStatus activity ) {
@@ -217,14 +234,22 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
                 @Override
                 public void onResponse( JSONObject data ) {
-                    Toast.makeText( getActivity(), getString( R.string.network_status_success ), Toast.LENGTH_SHORT ).show();
+                    Context context = getActivity();
+
+                    if ( context != null ) {
+                        Toast.makeText( context, getString( R.string.network_status_success ), Toast.LENGTH_SHORT ).show();
+                    }
                 }
 
             }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse( VolleyError error ) {
-                    Toast.makeText( getActivity(), error.getMessage(), Toast.LENGTH_LONG ).show();
+                    Context context = getActivity();
+
+                    if ( context != null ) {
+                        Toast.makeText( context, error.getMessage(), Toast.LENGTH_SHORT ).show();
+                    }
                 }
             } );
 
@@ -238,7 +263,11 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 saveStateToClient( payload );
             }
 
-            Toast.makeText( getActivity(), getString( R.string.network_posting_status ), Toast.LENGTH_SHORT).show();
+            Context context = getActivity();
+
+            if ( context != null ) {
+                Toast.makeText( context, getString( R.string.network_posting_status ), Toast.LENGTH_SHORT ).show();
+            }
 
             //mRequestQueue.add( request );
         }
@@ -253,17 +282,31 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
     }
 
     public void requestUpdates() {
-        Toast.makeText( getActivity(), getString( R.string.activity_starting_updates ), Toast.LENGTH_SHORT).show();
+        Context context = getActivity();
+
+        if ( context != null ) {
+            Toast.makeText( context, getString( R.string.activity_starting_updates ), Toast.LENGTH_SHORT).show();
+        }
 
         getActivityRecognitionClient().connect();
     }
 
     private JSONArray getSavedState() throws JSONException {
-        return new JSONArray( getSharedPreferences().getString(Constants.PAYLOAD_EXTRA, new JSONArray().toString()) );
+        SharedPreferences preferences = getSharedPreferences();
+
+        if ( preferences != null ) {
+            return new JSONArray( preferences.getString(Constants.PAYLOAD_EXTRA, new JSONArray().toString()) );
+        }
+
+        return new JSONArray();
     }
 
     private void saveStateToClient( JSONObject payload ) {
         SharedPreferences preferences = getSharedPreferences();
+
+        if ( preferences == null ) {
+            return;
+        }
 
         try {
             JSONArray collection = getSavedState();
@@ -274,12 +317,22 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                     .putString( Constants.PAYLOAD_EXTRA, collection.toString() )
                     .commit();
         } catch ( JSONException e ) {
-            Toast.makeText( getActivity(), e.toString(), Toast.LENGTH_SHORT ).show();
+            Context context = getActivity();
+
+            if ( context != null ) {
+                Toast.makeText( context, e.toString(), Toast.LENGTH_SHORT ).show();
+            }
         }
     }
 
     private SharedPreferences getSharedPreferences() {
-        return getActivity().getSharedPreferences( Constants.HISTORY_SHARED_PREFERENCES, Context.MODE_PRIVATE );
+        Context context = getActivity();
+
+        if ( context != null ) {
+            context.getSharedPreferences(Constants.HISTORY_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        }
+
+        return null;
     }
 
     private PendingIntent createRequestPendingIntent() {

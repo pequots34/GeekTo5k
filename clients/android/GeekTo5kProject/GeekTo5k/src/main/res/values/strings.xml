@@ -3,12 +3,12 @@
 
     <string name="app_name">GeekTo5k</string>
     <string name="action_settings">Settings</string>
-    <string name="action_start_recognition_updates">Start</string>
-    <string name="action_stop_recognition_updates">Stop</string>
+    <string name="action_start_recognition_updates">Request Updates</string>
+    <string name="action_stop_recognition_updates">Stop Updates</string>
     <string name="enter_username">ENTER USERNAME</string>
     <string name="account_username_empty">Name is required!</string>
     <string name="account_store_exception">Oops! Account could\'t be stored!</string>
-    <string name="account_update">UPDATE</string>
+    <string name="account_login">Login</string>
     <string name="account_banner_title">GEEK TO 5K</string>
     <string name="activity_starting_updates">Requesting new activity updates!</string>
     <string name="cycling">CYCLING</string>
