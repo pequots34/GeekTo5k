@@ -19,7 +19,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.geek.exercise.Constants;
-import com.geek.exercise.Logger;
 import com.geek.exercise.R;
 import com.geek.exercise.managers.StateManager;
 import com.geek.exercise.network.requests.MessageRequest;
@@ -37,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -371,10 +372,14 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
         private int mColorState;
 
+        private SimpleDateFormat mSimpleDateFormat;
+
         public ActivityStatusAdapter( Context context ) {
             super( context, -1 );
 
             mColorState = R.color.searching;
+
+            mSimpleDateFormat = new SimpleDateFormat( "HH:mm:ss" );
         }
 
         public void setColorState( int color ) {
@@ -386,7 +391,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
             ViewHolder holder = null;
 
             if ( convertView == null ) {
-                convertView = LayoutInflater.from( getContext() ).inflate( R.layout.status_item, null );
+                convertView = LayoutInflater.from( getContext() ).inflate( R.layout.item_activity_status, null );
 
                 if ( convertView != null ) {
                     holder = new ViewHolder();
@@ -419,6 +424,10 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 holder.time.setTextColor( getContext().getResources().getColor( mColorState ) );
 
                 holder.status.setText( ActivityStatusUtils.getActivityFromType( message.getType() ).toUpperCase( Locale.US ) );
+
+                try {
+                    holder.time.setText( mSimpleDateFormat.format( new Date( message.getElapsedRealtime() ) ) );
+                } catch( Exception e) { }
             }
 
             return convertView;
