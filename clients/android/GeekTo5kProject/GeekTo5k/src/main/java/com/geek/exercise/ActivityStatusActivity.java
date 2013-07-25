@@ -125,7 +125,7 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
                 return true;
             case R.id.action_cycling:
                 mCurrentActivity = ActivityStatus.newBuilder()
-                        .setRecognitionResult( ActivityStatusUtils.getActivityRecognitionMockResultByType( DetectedActivity.ON_FOOT ) )
+                        .setRecognitionResult( ActivityStatusUtils.getActivityRecognitionMockResultByType( DetectedActivity.ON_BICYCLE ) )
                         .build();
 
                 mActivityStatus.setCurrentActivity( mCurrentActivity );

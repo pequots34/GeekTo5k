@@ -19,5 +19,6 @@
     <string name="current_activity">YOUR\'RE CURRENTLY</string>
     <string name="standby">PLEASE STAND BY</string>
     <string name="network_status_success">Status posted!</string>
+    <string name="network_posting_status">Posting status. Please wait!</string>
 
 </resources>

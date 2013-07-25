@@ -238,7 +238,9 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 saveStateToClient( payload );
             }
 
-           mRequestQueue.add( request );
+            Toast.makeText( getActivity(), getString( R.string.network_posting_status ), Toast.LENGTH_SHORT).show();
+
+            //mRequestQueue.add( request );
         }
     }
 
