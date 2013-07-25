@@ -15,6 +15,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
@@ -43,6 +44,10 @@ public class HTTPTransport {
 	        HttpProtocolParams.setVersion( parameters, HttpVersion.HTTP_1_1 );
 	        
 	        HttpProtocolParams.setContentCharset( parameters, "utf-8" );
+	        
+	        HttpConnectionParams.setConnectionTimeout( parameters, 15 * 1000 );
+	        
+	        HttpConnectionParams.setSoTimeout( parameters, 15 * 1000 );
 	        
 	        SchemeRegistry registry = new SchemeRegistry();
 	        
