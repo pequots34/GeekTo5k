@@ -132,8 +132,6 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         } catch ( JSONException e ) {
             Toast.makeText( getActivity(), e.toString(), Toast.LENGTH_SHORT ).show();
         }
-
-        requestUpdates();
     }
 
     @Override
@@ -187,6 +185,10 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         }
     }
 
+    public void removeUpdates() {
+
+    }
+
     public void setCurrentActivity( ActivityStatus activity ) {
         if ( activity != null ) {
             IStatus status = activity.getStatusByType();
@@ -210,14 +212,12 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
             JSONObject payload = message.toPayload();
 
-            Toast.makeText( getActivity(), payload.toString(), Toast.LENGTH_LONG ).show();
-
             final JsonObjectRequest request = new JsonObjectRequest( Request.Method.POST, message.toURL(),
                     message.toJSONObject(), new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse( JSONObject data ) {
-                    Toast.makeText( getActivity(), data.toString(), Toast.LENGTH_SHORT ).show();
+                    Toast.makeText( getActivity(), getString( R.string.network_status_success ), Toast.LENGTH_SHORT ).show();
                 }
 
             }, new Response.ErrorListener() {
@@ -238,7 +238,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
                 saveStateToClient( payload );
             }
 
-           // mRequestQueue.add( request );
+           mRequestQueue.add( request );
         }
     }
 

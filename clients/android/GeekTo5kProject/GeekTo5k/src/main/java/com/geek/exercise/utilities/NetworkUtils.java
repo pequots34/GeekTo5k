@@ -9,7 +9,7 @@ import java.util.Locale;
  */
 public class NetworkUtils {
 
-    private static final String PRODUCTION = "http://geek-to-5k.elasticbeanstalk.com";
+    private static final String PRODUCTION = "http://geekto5k.elasticbeanstalk.com";
 
     private NetworkUtils() {
         super();

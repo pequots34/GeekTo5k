@@ -18,5 +18,6 @@
     <string name="vehicle">DRIVING</string>
     <string name="current_activity">YOUR\'RE CURRENTLY</string>
     <string name="standby">PLEASE STAND BY</string>
+    <string name="network_status_success">Status posted!</string>
 
 </resources>

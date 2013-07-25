@@ -8,4 +8,29 @@
           android:title="@string/action_stop_recognition_updates"
           android:orderInCategory="200"
           android:showAsAction="never" />
+
+    <item android:id="@+id/action_driving"
+          android:title="@string/vehicle"
+          android:orderInCategory="201"
+          android:showAsAction="never" />
+
+    <item android:id="@+id/action_on_foot"
+          android:title="@string/on_foot"
+          android:orderInCategory="202"
+          android:showAsAction="never" />
+
+    <item android:id="@+id/action_cycling"
+          android:title="@string/cycling"
+          android:orderInCategory="203"
+          android:showAsAction="never" />
+
+    <item android:id="@+id/action_standing"
+          android:title="@string/standing"
+          android:orderInCategory="204"
+          android:showAsAction="never" />
+
+    <item android:id="@+id/action_searching"
+          android:title="@string/searching"
+          android:orderInCategory="205"
+          android:showAsAction="never" />
 </menu>

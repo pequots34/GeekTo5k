@@ -17,6 +17,7 @@ import com.geek.exercise.transfer.ActivityStatus;
 import com.geek.exercise.utilities.ActivityStatusUtils;
 import com.geek.exercise.utilities.GooglePlayServiceUtils;
 import com.geek.exercise.utilities.IntentUtils;
+import com.google.android.gms.location.DetectedActivity;
 
 /**
  * Created by Pequots34 on 7/9/13.
@@ -99,7 +100,6 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
             case ActivityStatusFragment.CONNECTION_FAILURE_RESOLUTION_REQUEST:
                 switch( resultCode ) {
                     case RESULT_OK:
-
                         break;
                     default:
                         Logger.debug( "connection failure result code not ok" );
@@ -120,7 +120,47 @@ public class ActivityStatusActivity extends Activity implements ActivityStatusFr
 
                 return true;
             case R.id.action_stop_recognition_updates:
-                //TODO: STOP UPDATES
+                mActivityStatus.removeUpdates();
+
+                return true;
+            case R.id.action_cycling:
+                mCurrentActivity = ActivityStatus.newBuilder()
+                        .setRecognitionResult( ActivityStatusUtils.getActivityRecognitionMockResultByType( DetectedActivity.ON_FOOT ) )
+                        .build();
+
+                mActivityStatus.setCurrentActivity( mCurrentActivity );
+
+                return true;
+            case R.id.action_driving:
+                mCurrentActivity = ActivityStatus.newBuilder()
+                        .setRecognitionResult( ActivityStatusUtils.getActivityRecognitionMockResultByType( DetectedActivity.IN_VEHICLE ) )
+                        .build();
+
+                mActivityStatus.setCurrentActivity( mCurrentActivity );
+
+                return true;
+            case R.id.action_on_foot:
+                mCurrentActivity = ActivityStatus.newBuilder()
+                        .setRecognitionResult( ActivityStatusUtils.getActivityRecognitionMockResultByType( DetectedActivity.ON_FOOT ) )
+                        .build();
+
+                mActivityStatus.setCurrentActivity( mCurrentActivity );
+
+                return true;
+            case R.id.action_searching:
+                mCurrentActivity = ActivityStatus.newBuilder()
+                        .setRecognitionResult( ActivityStatusUtils.getActivityRecognitionMockResultByType( DetectedActivity.UNKNOWN ) )
+                        .build();
+
+                mActivityStatus.setCurrentActivity( mCurrentActivity );
+
+                return true;
+            case R.id.action_standing:
+                mCurrentActivity = ActivityStatus.newBuilder()
+                        .setRecognitionResult( ActivityStatusUtils.getActivityRecognitionMockResultByType( DetectedActivity.STILL ) )
+                        .build();
+
+                mActivityStatus.setCurrentActivity( mCurrentActivity );
 
                 return true;
             default:

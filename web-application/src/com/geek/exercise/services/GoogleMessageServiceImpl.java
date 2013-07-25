@@ -87,7 +87,7 @@ public class GoogleMessageServiceImpl implements GoogleMessageService {
 			return GoogleCloudMessageResponse.newBuilder()
 					.setTasks( messages )
 					.build();
-		} catch ( InterruptedException e ) {
+		} catch ( Exception e ) {
 			return ErrorResponse.newBuilder()
 					.setMessage( e )
 					.build();

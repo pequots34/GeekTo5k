@@ -45,9 +45,9 @@ public class HTTPTransport {
 	        
 	        HttpProtocolParams.setContentCharset( parameters, "utf-8" );
 	        
-	        HttpConnectionParams.setConnectionTimeout( parameters, 15 * 1000 );
+	        HttpConnectionParams.setConnectionTimeout( parameters, 20 * 1000 );
 	        
-	        HttpConnectionParams.setSoTimeout( parameters, 15 * 1000 );
+	        HttpConnectionParams.setSoTimeout( parameters, 20 * 1000 );
 	        
 	        SchemeRegistry registry = new SchemeRegistry();
 	        
