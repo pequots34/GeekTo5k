@@ -163,7 +163,9 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
 
     @Override
     public void onConnected( Bundle bundle ) {
-        getActivityRecognitionClient().requestActivityUpdates( DETECTION_INTERVAL_MILLISECONDS, createRequestPendingIntent() );
+        try {
+            getActivityRecognitionClient().requestActivityUpdates( DETECTION_INTERVAL_MILLISECONDS, createRequestPendingIntent() );
+        } catch( IllegalStateException e ) {}
     }
 
     @Override
@@ -210,15 +212,17 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         if ( activity != null ) {
             IStatus status = activity.getStatusByType();
 
+            int color = status.getColorStateResource();
+
             mBanner.setBackgroundResource( status.getBannerResource() );
 
             mType.setText( status.getTextResource() );
 
-            mMe.setTextColor( getResources().getColor( status.getColorStateResource() ) );
+            mMe.setTextColor( getResources().getColor( color ) );
 
-            mType.setTextColor( getResources().getColor( status.getColorStateResource() ) );
+            mType.setTextColor( getResources().getColor( color ) );
 
-            mActivityStatusAdapter.setColorState( status.getColorStateResource() );
+            mActivityStatusAdapter.setColorState( color );
 
             Account account = StateManager.ApplicationManager.INSTANCE.getAccount();
 
@@ -300,23 +304,21 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
     private void saveStateToClient( JSONObject payload ) {
         SharedPreferences preferences = getSharedPreferences();
 
-        if ( preferences == null ) {
-            return;
-        }
+        if ( preferences != null ) {
+            try {
+                JSONArray collection = getSavedState();
 
-        try {
-            JSONArray collection = getSavedState();
+                collection.put( payload );
 
-            collection.put( payload );
+                preferences.edit()
+                        .putString( Constants.PAYLOAD_EXTRA, collection.toString() )
+                        .commit();
+            } catch ( JSONException e ) {
+                Context context = getActivity();
 
-            preferences.edit()
-                    .putString( Constants.PAYLOAD_EXTRA, collection.toString() )
-                    .commit();
-        } catch ( JSONException e ) {
-            Context context = getActivity();
-
-            if ( context != null ) {
-                Toast.makeText( context, e.toString(), Toast.LENGTH_SHORT ).show();
+                if ( context != null ) {
+                    Toast.makeText( context, e.toString(), Toast.LENGTH_SHORT ).show();
+                }
             }
         }
     }
@@ -325,7 +327,7 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         Context context = getActivity();
 
         if ( context != null ) {
-            context.getSharedPreferences(Constants.HISTORY_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            return context.getSharedPreferences(Constants.HISTORY_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         }
 
         return null;
@@ -335,15 +337,20 @@ public class ActivityStatusFragment extends ListFragment implements GooglePlaySe
         if ( getRequestPendingIntent() != null ) {
             return mActivityRecognitionPendingIntent;
         } else {
-            Intent intent = new Intent( getActivity(), ActivityIntentService.class );
+            Context context = getActivity();
 
-            PendingIntent pendingIntent = PendingIntent.getService( getActivity(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
+            if ( context != null ) {
+                Intent intent = new Intent( getActivity(), ActivityIntentService.class );
 
-            setRequestPendingIntent( pendingIntent );
+                PendingIntent pendingIntent = PendingIntent.getService( context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
 
-            return pendingIntent;
+                setRequestPendingIntent( pendingIntent );
+
+                return pendingIntent;
+            }
         }
 
+        return null;
     }
 
     private ActivityRecognitionClient getActivityRecognitionClient() {
